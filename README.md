@@ -5,7 +5,7 @@ congresales 2016.
 
 ## Antecedentes
 En las pasada campaña de Elecciones Regionales y Municipales 2014 ejecutamos el
-proyecto **Verita** <utero.pe/tag/verita/>.
+proyecto **Verita** <http://utero.pe/tag/verita/>.
 
 * Vale la pena hacer algo similar?
 * Algo mejor?
