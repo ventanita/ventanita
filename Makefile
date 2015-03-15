@@ -1,2 +1,2 @@
-serve: rebuild_index
-	python manage.py runserver --settings=ventanita.settings.local
+serve:
+	python ventanita/manage.py runserver --settings=ventanita.settings.local
