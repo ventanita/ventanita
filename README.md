@@ -1,5 +1,7 @@
 #Esta es ventanita
 
+[![Join the chat at https://gitter.im/aniversarioperu/ventanita](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aniversarioperu/ventanita?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Poyecto de periodismo de datos con miras a las elecciones presidenciales,
 congresales 2016.
 
