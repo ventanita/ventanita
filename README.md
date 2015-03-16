@@ -19,3 +19,5 @@ Necesitamos ideas. Aporte y discusión de ideas aquí:
 Hacer un *aplicativo* web usando el **framework Django**. Este aplicativo permitirá 
 que usuarios puedan dar evaluar rápidamente la idoneidad de los candidatos y
 partidos políticos que se presenten a las Elecciones 2016.
+
+Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/home/>.
