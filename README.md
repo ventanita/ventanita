@@ -21,3 +21,10 @@ que usuarios puedan dar evaluar rápidamente la idoneidad de los candidatos y
 partidos políticos que se presenten a las Elecciones 2016.
 
 Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/home/>.
+
+## Licencia
+Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
+COPYING y LICENSE).
+El derecho de autor (*copyright*) en este proyecto corresponde a varias personas.
+El *copyright* para cada módulo está indicado al inicio de cada archivo, el cual
+corresponde al autor inicial y personas que contribuyeron con adiciones y modificaciones.
