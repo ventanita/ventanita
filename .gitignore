@@ -1,11 +1,17 @@
-*db
-*.json
 *.csv
-config.py
-.idea
 *bz2
 
-# whoosh indexing
+# own configuration files
+*.json
+config.json
+
+# databases
+db.sqlite3
+*sql
+*db
+
+# Pycharm
+.idea
 
 *.py[cod]
 
