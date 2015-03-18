@@ -25,7 +25,7 @@ Flujo de trabajo recomendado
 5. Subir los cambios a tu copia del repositorio: ``git push origin patch-1``
 6. Estando en Github, crear un *pull request*.
 7. Fastidiar a AniversarioPeru para que acepte el *pull request*.
-8. Agregas tu nombre y email de contacto al archivo ``CONTRIB``.
+8. Agregas tu nombre y email de contacto al archivo ``CREDITS``.
 
 Antes de hacer *pull request* adicionales
 -----------------------------------------
