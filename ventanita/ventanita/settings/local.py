@@ -12,6 +12,7 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
+ADMIN_ENABLED = False
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, '..', 'templates'),
