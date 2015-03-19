@@ -41,6 +41,13 @@ asegurándote que haya sido incluido en tu ``.gitignore``.
 }
 ```
 
+## Ejecutar la aplicación
+Puede usar el ``Makefile`` de ventanita:
+
+```shell
+> make serve
+```
+
 ## Licencia
 Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
 COPYING y LICENSE).
