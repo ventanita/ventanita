@@ -22,6 +22,25 @@ partidos políticos que se presenten a las Elecciones 2016.
 
 Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/home/>.
 
+## Dependencias
+* python3
+* pip install -r requirements/testing.txt
+
+## Configuración
+Puedes poner tus datos de desarrollo local en un archivo ``config.json``,
+asegurándote que haya sido incluido en tu ``.gitignore``.
+
+```javascript
+{
+    "SECRET_KEY": "crear una clave secreta",
+    "DB_USER": "usuario de base de datos postgreSQL",
+    "DB_PASS": "tu contraseña para la base de datos",
+    "DB_NAME": "ventanita",
+    "DB_PORT": "5432",
+    "DB_HOST": "localhost"
+}
+```
+
 ## Licencia
 Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
 COPYING y LICENSE).
