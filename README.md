@@ -24,7 +24,7 @@ Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/
 
 ## Dependencias
 * python3
-* pip install -r requirements/testing.txt
+* ``pip install -r requirements/testing.txt``
 
 ## Configuración
 Puedes poner tus datos de desarrollo local en un archivo ``config.json``,
