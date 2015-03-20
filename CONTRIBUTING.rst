@@ -19,7 +19,7 @@ Flujo de trabajo recomendado
     # Copyright 2015 by Fulano Mengano. All rights reserved.
     # Revisions 2015 copyright by Zutano Perengano. All rights reserved.
     # This code is part of the Ventanita distribution and governed by its
-    # license.  Please see the LICENSE file that should have been included
+    # license. Please see the LICENSE file that should have been included
     # as part of this package.
 
 5. Subir los cambios a tu copia del repositorio: ``git push origin patch-1``
