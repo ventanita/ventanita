@@ -108,18 +108,18 @@ class Penal(models.Model):
     expediente = models.CharField(max_length=300)
     juzgado = models.CharField(max_length=300)
     fallo = models.CharField(max_length=300)
-    fechaSentencia = models.DateField()
+    fecha_sentencia = models.DateField()
     candidato = models.ForeignKey('Candidato')
 
 
 class Postgrado(models.Model):
     concluido = models.BooleanField()
-    gradoTitulo = models.CharField(max_length=300)
+    grado_titulo = models.CharField(max_length=300)
     tipo = models.CharField(max_length=300)
     inicio = models.IntegerField()
     fin = models.IntegerField()
     pais = models.CharField(max_length=300)
-    instEducativa = models.CharField(max_length=300)
+    inst_educativa = models.CharField(max_length=300)
     especialidad = models.CharField(max_length=300)
     candidato = models.ForeignKey('Candidato')
 
@@ -134,7 +134,7 @@ class Tecnico(models.Model):
     inicio = models.IntegerField()
     fin = models.IntegerField()
     pais = models.CharField(max_length=300)
-    instEducativa = models.CharField(max_length=300)
+    inst_educativa = models.CharField(max_length=300)
     candidato = models.ForeignKey('Candidato')
 
 
@@ -142,13 +142,13 @@ class Universitario(models.Model):
     departamento = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
     concluido = models.BooleanField()
-    gradoTitulo = models.CharField(max_length=300)
+    grado_titulo = models.CharField(max_length=300)
     provincia = models.CharField(max_length=300)
     facultad = models.CharField(max_length=300)
     carrera = models.CharField(max_length=300)
     inicio = models.IntegerField()
     fin = models.IntegerField()
-    instEducativa = models.CharField(max_length=300)
+    inst_educativa = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
     candidato = models.ForeignKey('Candidato')
 
@@ -163,7 +163,7 @@ class Partidario(models.Model):
 
 
 class Eleccion(models.Model):
-    procesoElectoral = models.CharField(max_length=300)
+    proceso_electoral = models.CharField(max_length=300)
     cargo = models.CharField(max_length=300)
     provincia = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
@@ -195,7 +195,7 @@ class Secundaria(models.Model):
     inicio = models.IntegerField()
     fin = models.IntegerField()
     pais = models.CharField(max_length=300)
-    instEducativa = models.CharField(max_length=300)
+    inst_educativa = models.CharField(max_length=300)
     candidato = models.ForeignKey('Candidato')
 
 
@@ -205,7 +205,7 @@ class Primaria(models.Model):
     departamento = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
-    instEducativa = models.CharField(max_length=300)
+    inst_educativa = models.CharField(max_length=300)
     inicio = models.IntegerField()
     fin = models.IntegerField()
     candidato = models.ForeignKey('Candidato')
