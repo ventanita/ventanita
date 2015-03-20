@@ -45,94 +45,74 @@ class Candidato(models.Model):
     residencia_provincia = models.CharField(max_length=300)
     residencia_departamento = models.CharField(max_length=300)
 
-    bienes_muebles = relationship("BienMueble", backref="candidato")
-    bienes_inmuebles = relationship("BienInmueble", backref="candidato")
-    otra_experiencia = relationship("OtraExperiencia", backref="candidato")
-    militancia = relationship("Militancia", backref="candidato")
-    civil = relationship("Civil", backref="candidato")
-    educacion_basica_primaria = relationship("Primaria", backref="candidato")
-    educacion_basica_secundaria = relationship("Secundaria", backref="candidato")
-    educacion_superior_postgrado = relationship("Postgrado", backref="candidato")
-    educacion_superior_universitario = relationship("Universitario", backref="candidato")
-    educacion_superior_tecnico = relationship("Tecnico", backref="candidato")
-    partidario = relationship("Partidario", backref="candidato")
-    eleccion = relationship("Eleccion", backref="candidato")
-    experiencia = relationship("Experiencia", backref="candidato")
-    observaciones = relationship("Observacion", backref="candidato")
+    # bienes_muebles = relationship("BienMueble", backref="candidato")
+    # bienes_inmuebles = relationship("BienInmueble", backref="candidato")
+    # otra_experiencia = relationship("OtraExperiencia", backref="candidato")
+    # militancia = relationship("Militancia", backref="candidato")
+    # civil = relationship("Civil", backref="candidato")
+    # educacion_basica_primaria = relationship("Primaria", backref="candidato")
+    # educacion_basica_secundaria = relationship("Secundaria", backref="candidato")
+    # educacion_superior_postgrado = relationship("Postgrado", backref="candidato")
+    # educacion_superior_universitario = relationship("Universitario", backref="candidato")
+    # educacion_superior_tecnico = relationship("Tecnico", backref="candidato")
+    # partidario = relationship("Partidario", backref="candidato")
+    # eleccion = relationship("Eleccion", backref="candidato")
+    # experiencia = relationship("Experiencia", backref="candidato")
+    # observaciones = relationship("Observacion", backref="candidato")
 
 
 class BienMueble(models.Model):
-    __tablename__ = 'bienes_muebles'
-    id = Column(Integer, primary_key=True)
     bien = models.CharField(max_length=300)
     tipo = models.CharField(max_length=300)
     descripcion = models.CharField(max_length=300)
     caracteristicas = models.CharField(max_length=300)
     valor = models.IntegerField()
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class BienInmueble(models.Model):
-    __tablename__ = 'bienes_inmuebles'
-    id = Column(Integer, primary_key=True)
     registro = models.CharField(max_length=300)
     valor = models.IntegerField()
     tipo = models.CharField(max_length=300)
     direccion = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class OtraExperiencia(models.Model):
-    __tablename__ = 'otra_experiencia'
-    id = Column(Integer, primary_key=True)
     cargo = models.CharField(max_length=300)
     entidad = models.CharField(max_length=300)
     inicio = models.IntegerField()
     fin = models.IntegerField()
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Militancia(models.Model):
-    __tablename__ = 'militancias'
-    id = Column(Integer, primary_key=True)
     inicio = models.IntegerField()
     fin = models.IntegerField()
-    orgPolitica = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    org_politica = models.CharField(max_length=300)
+    candidato = models.ForeignKey('Candidato')
 
 
 class Civil(models.Model):
     """Antecedentes civiles"""
-    __tablename__ = 'civiles'
-    id = Column(Integer, primary_key=True)
     expediente = models.CharField(max_length=300)
     juzgado = models.CharField(max_length=300)
     materia = models.CharField(max_length=300)
     fallo = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Penal(models.Model):
     """Antecedentes penales"""
-    __tablename__ = 'penales'
-    id = Column(Integer, primary_key=True)
     delito = models.CharField(max_length=300)
     expediente = models.CharField(max_length=300)
     juzgado = models.CharField(max_length=300)
     fallo = models.CharField(max_length=300)
     fechaSentencia = models.DateField()
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Postgrado(models.Model):
-    __tablename__ = 'educacion_superior_postgrado'
-    id = Column(Integer, primary_key=True)
     concluido = models.BooleanField()
     gradoTitulo = models.CharField(max_length=300)
     tipo = models.CharField(max_length=300)
@@ -141,13 +121,10 @@ class Postgrado(models.Model):
     pais = models.CharField(max_length=300)
     instEducativa = models.CharField(max_length=300)
     especialidad = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Tecnico(models.Model):
-    __tablename__ = 'educacion_superior_tecnico'
-    id = Column(Integer, primary_key=True)
     concluido = models.BooleanField()
     provincia = models.CharField(max_length=300)
     curso = models.CharField(max_length=300)
@@ -158,13 +135,10 @@ class Tecnico(models.Model):
     fin = models.IntegerField()
     pais = models.CharField(max_length=300)
     instEducativa = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Universitario(models.Model):
-    __tablename__ = 'educacion_superior_universitario'
-    id = Column(Integer, primary_key=True)
     departamento = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
     concluido = models.BooleanField()
@@ -176,25 +150,19 @@ class Universitario(models.Model):
     fin = models.IntegerField()
     instEducativa = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Partidario(models.Model):
-    __tablename__ = 'partidario'
-    id = Column(Integer, primary_key=True)
     cargo = models.CharField(max_length=300)
     ambito = models.CharField(max_length=300)
-    orgPolitica = models.CharField(max_length=300)
+    org_politica = models.CharField(max_length=300)
     inicio = models.IntegerField()
     fin = models.IntegerField()
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Eleccion(models.Model):
-    __tablename__ = 'eleccion'
-    id = Column(Integer, primary_key=True)
     procesoElectoral = models.CharField(max_length=300)
     cargo = models.CharField(max_length=300)
     provincia = models.CharField(max_length=300)
@@ -203,14 +171,11 @@ class Eleccion(models.Model):
     fin = models.IntegerField()
     distrito = models.CharField(max_length=300)
     ambito = models.CharField(max_length=300)
-    orgPolitica = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    org_politica = models.CharField(max_length=300)
+    candidato = models.ForeignKey('Candidato')
 
 
 class Experiencia(models.Model):
-    __tablename__ = 'experiencia'
-    id = Column(Integer, primary_key=True)
     sector = models.CharField(max_length=300)
     cargo = models.IntegerField()
     provincia = models.CharField(max_length=300)
@@ -219,13 +184,10 @@ class Experiencia(models.Model):
     inicio = models.IntegerField()
     fin = models.IntegerField()
     departamento = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Secundaria(models.Model):
-    __tablename__ = 'educacion_basica_secundaria'
-    id = Column(Integer, primary_key=True)
     concluido = models.BooleanField()
     provincia = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
@@ -234,13 +196,10 @@ class Secundaria(models.Model):
     fin = models.IntegerField()
     pais = models.CharField(max_length=300)
     instEducativa = models.CharField(max_length=300)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Primaria(models.Model):
-    __tablename__ = 'educacion_basica_primaria'
-    id = Column(Integer, primary_key=True)
     concluido = models.BooleanField()
     provincia = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
@@ -249,14 +208,10 @@ class Primaria(models.Model):
     instEducativa = models.CharField(max_length=300)
     inicio = models.IntegerField()
     fin = models.IntegerField()
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
 
 
 class Observacion(models.Model):
-    __tablename__ = 'observaciones'
-    id = Column(Integer, primary_key=True)
     referencia = models.CharField(max_length=300)
     anotacion = models.CharField(max_length=2000)
-
-    id_candidato = Column(Integer, ForeignKey('candidatos.id'))
+    candidato = models.ForeignKey('Candidato')
