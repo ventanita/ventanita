@@ -113,7 +113,7 @@ class Penal(models.Model):
 
 
 class Postgrado(models.Model):
-    concluido = models.BooleanField()
+    concluido = models.NullBooleanField()
     grado_titulo = models.CharField(max_length=300)
     tipo = models.CharField(max_length=300)
     inicio = models.IntegerField()
@@ -125,7 +125,7 @@ class Postgrado(models.Model):
 
 
 class Tecnico(models.Model):
-    concluido = models.BooleanField()
+    concluido = models.NullBooleanField()
     provincia = models.CharField(max_length=300)
     curso = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
@@ -141,7 +141,7 @@ class Tecnico(models.Model):
 class Universitario(models.Model):
     departamento = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
-    concluido = models.BooleanField()
+    concluido = models.NullBooleanField()
     grado_titulo = models.CharField(max_length=300)
     provincia = models.CharField(max_length=300)
     facultad = models.CharField(max_length=300)
@@ -188,7 +188,7 @@ class Experiencia(models.Model):
 
 
 class Secundaria(models.Model):
-    concluido = models.BooleanField()
+    concluido = models.NullBooleanField()
     provincia = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
@@ -200,7 +200,7 @@ class Secundaria(models.Model):
 
 
 class Primaria(models.Model):
-    concluido = models.BooleanField()
+    concluido = models.NullBooleanField()
     provincia = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
