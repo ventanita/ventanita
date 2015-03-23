@@ -43,6 +43,7 @@ INSTALLED_APPS = (
 
     'core',
     'sentenciados',
+    'pages',
 )
 
 MIDDLEWARE_CLASSES = (
