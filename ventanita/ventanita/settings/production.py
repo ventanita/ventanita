@@ -3,8 +3,15 @@
 # license. Please see the LICENSE file that should have been included
 # as part of this package.
 
-from .base import *
+from .local import *
 
 
 DEBUG = False
 TEMPLATE_DEBUG = False
+
+STATIC_ROOT = '/www/public/ventanita/static/'
+
+ALLOWED_HOSTS = [
+    '.ventanita.soy',
+    '.ventanita.soy.',
+]
