@@ -48,6 +48,13 @@ Puede usar el ``Makefile`` de ventanita:
 > make serve
 ```
 
+## Scripts para importar datos
+Van en el folder ``scripts_for_imports``:
+
+* Puedes importar el ``dummy_data`` a una base de datos MSSQL usando el script
+  ``import_to_mssql.py``.
+  
+
 ## Licencia
 Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
 COPYING y LICENSE).
