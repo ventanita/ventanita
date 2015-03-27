@@ -7,6 +7,9 @@
 Poyecto de periodismo de datos con miras a las elecciones presidenciales,
 congresales 2016.
 
+Ventanita is un proyecto desarrollado por voluntarios. Tus contribuciones y mejoras
+al código son bienvenidas.
+
 ## Antecedentes
 En las pasada campaña de Elecciones Regionales y Municipales 2014 ejecutamos el
 proyecto **Verita** <http://utero.pe/tag/verita/>.
