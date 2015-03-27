@@ -7,7 +7,7 @@ serve:
 
 test:
 	coverage run --source ventanita ventanita/manage.py test -v 2 \
-	    pages \
+	    core pages \
 	    --settings=ventanita.settings.testing
 
 coverage: test
