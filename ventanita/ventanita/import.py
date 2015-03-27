@@ -1,5 +1,4 @@
 # Copyright 2015 by Vitoko. All rights reserved.
-# Revisions 2015 copyright by Zutano Perengano. All rights reserved.
 # This code is part of the Ventanita distribution and governed by its
 # license. Please see the LICENSE file that should have been included
 # as part of this package.
@@ -7,9 +6,11 @@
 import _mssql
 import csv
 
+
 def replace(content):
     if content != '':
         return content.replace("'", "")
+
 
 def importar(row, index):
     conn = _mssql.connect(server='s10.winhost.com:1433',
