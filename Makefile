@@ -4,3 +4,12 @@ migrations:
 
 serve:
 	python ventanita/manage.py runserver --settings=ventanita.settings.local
+
+test:
+	coverage run --source ventanita ventanita/manage.py test -v 2 \
+	    core pages \
+	    --settings=ventanita.settings.testing
+
+coverage: test
+	coverage report -m
+	coverage html
