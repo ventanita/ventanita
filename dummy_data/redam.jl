@@ -1,0 +1,3 @@
+{"nombres": "SEGUNDO HUMBERTO", "dni": "03847515", "apellido_materno": "BENITES", "url": "http://casillas.pj.gob.pe/redamWeb/_rlvid.jsp.faces?_rap=pc_Index.obtenerDeudor&_rvip=/index.jsp&idDeudor=redam_html_files/149", "debe": 2050.0, "apellido_paterno": "GONZALES", "vinculo": [{"nombre_completo": "TERRANOVA LOJAS MARIA DEL MILAGRO", "vinculo": "DEMANDANTE"}]}
+{"nombres": "FELIPE", "dni": "04649138", "apellido_materno": "CALIZAYA", "url": "http://casillas.pj.gob.pe/redamWeb/_rlvid.jsp.faces?_rap=pc_Index.obtenerDeudor&_rvip=/index.jsp&idDeudor=redam_html_files/124", "debe": 3750.66, "apellido_paterno": "CUAYLA", "vinculo": [{"nombre_completo": "APAZA GUZMAN GREGORIA ESTELA", "vinculo": "DEMANDANTE"}]}
+
