@@ -6,47 +6,58 @@
 import _mssql
 import csv
 
+def replace_quote(content):
+    if(content != ''):
+        return content.replace("'","")
+def replace_empty(content):
+    if(content == ''):
+        return 0
 
-def replace(content):
-    if content != '':
-        return content.replace("'", "")
-
-
-def importar(row, index):
+def importar(row):
     conn = _mssql.connect(server='s10.winhost.com:1433',
                           user='DB_76507_ventanita_user',
                           password='123abc$',
                           database='DB_76507_ventanita')
-    query = "INSERT INTO Candidatos VALUES({21}, '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', {20})".format(
-        replace(row['ORGANIZACION POLITICA']),
-        replace(row['CARGO AL QUE POSTULA']),
-        replace(row['DEPARTAMENTO AL QUE POSTULA']),
-        replace(row['PROVINCIA AL QUE POSTULA']),
-        replace(row['DISTRITO AL QUE POSTULA']),
-        replace(row['DESIGNACION']),
-        replace(row['APELLIDO PATERNO']),
-        replace(row['APELLIDO MATERNO']),
-        replace(row['NOMBRE COMPLETO']),
-        replace(row['SEXO']),
-        replace(row['DNI']),
-        replace(row['CORREO ELECTRONICO']),
-        replace(row['DEPARTAMENTO DE NACIMIENTO']),
-        replace(row['PROVINCIA DE NACIMIENTO']),
-        replace(row['DISTRITO DE NACIMIENTO']),
-        replace(row['FECHA DE NACIMIENTO']),
-        replace(row['DEPARTAMENTO DE RESIDENCIA']),
-        replace(row['PROVINCIA DE RESIDENCIA']),
-        replace(row['DISTRITO DE RESIDENCIA']),
-        replace(row['LUGAR DE RESIDENCIA']),
-        replace(row['TIEMPO DE RESIDENCIA']),
-        index)
+    query = "INSERT INTO Candidatos VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', {21})".format(
+        replace_quote(row['DNI']),
+        replace_quote(row['DEPARTAMENTO AL QUE POSTULA']),
+        replace_quote(row['PROVINCIA AL QUE POSTULA']),
+        replace_quote(row['DISTRITO AL QUE POSTULA']),
+        replace_quote(row['ID_CANDIDATO']),
+        replace_quote(row['NOMBRE COMPLETO']),
+        replace_quote(row['ORGANIZACION POLITICA']),
+        replace_quote(row['CARGO AL QUE POSTULA']),
+        replace_quote(row['DESIGNACION']),
+        replace_quote(row['APELLIDO PATERNO']),
+        replace_quote(row['APELLIDO MATERNO']),
+        replace_quote(row['SEXO']),
+        replace_quote(row['CORREO ELECTRONICO']),
+        replace_quote(row['DEPARTAMENTO DE NACIMIENTO']),
+        replace_quote(row['PROVINCIA DE NACIMIENTO']),
+        replace_quote(row['DISTRITO DE NACIMIENTO']),
+        replace_quote(row['FECHA DE NACIMIENTO']),
+        replace_quote(row['DEPARTAMENTO DE RESIDENCIA']),
+        replace_quote(row['PROVINCIA DE RESIDENCIA']),
+        replace_quote(row['DISTRITO DE RESIDENCIA']),
+        replace_quote(row['LUGAR DE RESIDENCIA']),
+        replace_empty(row['TIEMPO DE RESIDENCIA']))
     conn.execute_non_query(query)
     conn.close()
 
+def get_total_lines():
+    with open('../dummy_data/dummy_data0.tsv', 'rU') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter="\t")
+        i = 0
+        for row in reader:
+            i += 1
+        return i
 
-with open('../../dummy_data/dummy_data0.csv', 'rU') as csvfile:
-    reader = csv.DictReader(csvfile)
-    index = 1
+
+with open('../dummy_data/dummy_data0.tsv', 'rU') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter="\t")
+    total = get_total_lines()
+    i = 0
     for row in reader:
-        importar(row, index)
-        index += 1
+        importar(row)
+        i += 1
+        print 'import {0} of {1}'.format(i, total)
