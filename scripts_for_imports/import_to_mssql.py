@@ -6,12 +6,16 @@
 import _mssql
 import csv
 
+
 def replace_quote(content):
-    if(content != ''):
-        return content.replace("'","")
+    if content != '':
+        return content.replace("'", "")
+
+
 def replace_empty(content):
-    if(content == ''):
+    if content == '':
         return 0
+
 
 def importar(row):
     conn = _mssql.connect(server='s10.winhost.com:1433',
@@ -43,6 +47,7 @@ def importar(row):
         replace_empty(row['TIEMPO DE RESIDENCIA']))
     conn.execute_non_query(query)
     conn.close()
+
 
 def get_total_lines():
     with open('../dummy_data/dummy_data0.tsv', 'rU') as csvfile:
