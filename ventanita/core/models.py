@@ -215,3 +215,18 @@ class Observacion(models.Model):
     referencia = models.CharField(max_length=300)
     anotacion = models.CharField(max_length=2000)
     candidato = models.ForeignKey('Candidato')
+
+
+class DeudorRedam(models.Model):
+    dni = models.CharField(max_length=8)
+    apellido_paterno = models.CharField(max_length=100)
+    apellido_materno = models.CharField(max_length=100)
+    nombres = models.CharField(max_length=200)
+    url = models.URLField()
+    debe = models.FloatField()
+
+
+class DeudorRedamVinculo(models.Model):
+    deudor = models.ForeignKey('DeudorRedam')
+    vinculo = models.CharField(max_length=100)
+    nombre_completo = models.CharField(max_length=300)
