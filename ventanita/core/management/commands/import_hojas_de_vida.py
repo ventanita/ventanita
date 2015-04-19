@@ -22,20 +22,20 @@ class Command(BaseCommand):
                     dest='tsvfile',
                     help='Enter name of tsv file as argument.'
                     ),
-        make_option('--hoja',
-                    dest='hoja',
+        make_option('--sheet',
+                    dest='sheet',
                     help='Enter name of Excel sheet number to import.'
                     ),
     )
 
     def handle(self, *args, **options):
-        if options['tsvfile'] is None or options['hoja'] is None:
+        if options['tsvfile'] is None or options['sheet'] is None:
             error_msg = 'Enter name of tsv file as argument.' \
-                        ' "python manage.py import_hojas_de_vida --tsvfile=hoja0.tsv --hoja=0 --settings=ventanita.settings.local'
+                        ' "python manage.py import_hojas_de_vida --tsvfile=hoja0.tsv --sheet=0 --settings=ventanita.settings.local'
             raise CommandError(error_msg)
 
         tsv_file = options['tsvfile']
-        hoja = options['hoja']
+        sheet = options['sheet']
 
         with codecs.open(tsv_file, "r") as file_handle:
             dump = file_handle.readlines()
@@ -43,13 +43,17 @@ class Command(BaseCommand):
         items = []
         n = len(dump)
         bar = pyprind.ProgBar(n)
+
+        candidatos_objects = Candidato.objects.all()
+        candidatos_dict = self.as_dict(candidatos_objects)
+
         for line in dump:
             item = None
 
-            if hoja == '0':
+            if sheet == '0':
                 item = self.parse_line(line)
-            elif hoja == '1':
-                item = self.parse_line_hoja1(line)
+            elif sheet == '1':
+                item = self.parse_line_sheet1(line, candidatos_dict)
 
             if item is not None:
                 items.append(Candidato(**item))
@@ -112,13 +116,26 @@ class Command(BaseCommand):
                 return item
         return None
 
-    def parse_line_hoja1(self, line):
+    def parse_line_sheet1(self, line, candidatos):
         line = line.strip()
         if line != '':
             fields = line.split('\t')
             item = dict()
-            item['dni'] = fields[0]
+            dni = fields[1]
+
+            if dni == 'DNI':
+                return None
+
+            print(">>>>>>>dni", dni)
+            print(candidatos[dni].dni)
+
 
             if item['dni'] != 'DNI':
                 return item
         return None
+
+    def as_dict(self, candidatos_objects):
+        mydict = dict()
+        for i in candidatos_objects:
+            mydict[i.dni] = i
+        return mydict
