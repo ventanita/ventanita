@@ -8,6 +8,8 @@ from django.db import models
 
 
 class Candidato(models.Model):
+    id_candidato_jne = models.IntegerField(help_text='ID asignado por el JNE')
+
     # Datos Personales
     dni = models.CharField(max_length=8)
     nombres = models.CharField(max_length=300)
