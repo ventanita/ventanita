@@ -58,6 +58,8 @@ Van en el folder ``scripts_for_imports``:
 
 * Puedes importar el ``dummy_data`` a una base de datos MSSQL usando el script
   ``import_to_mssql.py``.
+* Importar registros del REDAM: 
+  ``python ventanita/manage.py redam.jl --settings=ventanita.settings.local``
   
 
 ## Licencia
