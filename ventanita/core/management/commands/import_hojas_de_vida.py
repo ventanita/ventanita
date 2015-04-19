@@ -48,6 +48,8 @@ class Command(BaseCommand):
 
             if hoja == '0':
                 item = self.parse_line(line)
+            elif hoja == '1':
+                item = self.parse_line_hoja1(line)
 
             if item is not None:
                 items.append(Candidato(**item))
@@ -105,6 +107,17 @@ class Command(BaseCommand):
                 item['residencia_tiempo'] = fields[21]
             except IndexError:
                 item['residencia_tiempo'] = ''
+
+            if item['dni'] != 'DNI':
+                return item
+        return None
+
+    def parse_line_hoja1(self, line):
+        line = line.strip()
+        if line != '':
+            fields = line.split('\t')
+            item = dict()
+            item['dni'] = fields[0]
 
             if item['dni'] != 'DNI':
                 return item
