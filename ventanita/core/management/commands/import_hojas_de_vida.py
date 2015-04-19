@@ -47,18 +47,46 @@ class Command(BaseCommand):
         candidatos_objects = Candidato.objects.all()
         candidatos_dict = self.as_dict(candidatos_objects)
 
-        for line in dump:
-            item = None
-
-            if sheet == '0':
+        if sheet == '0':
+            for line in dump:
                 item = self.parse_line(line)
-            elif sheet == '1':
-                item = self.parse_line_sheet1(line, candidatos_dict)
+                if item is not None:
+                    items.append(Candidato(**item))
+                bar.update()
+        elif sheet == '1':
+            self.import_colegios(dump)
+            # item = self.parse_line_sheet1(line, candidatos_dict)
 
-            if item is not None:
-                items.append(Candidato(**item))
-            bar.update()
         Candidato.objects.bulk_create(items)
+
+    def import_colegios(self, dump):
+        colegios = set()
+        for line in dump:
+            line = line.strip()
+            # line = line.replace('\t\t', '\t')
+            fields = line.split('\t')
+            # if fields[1] == 'DNI':
+                # continue
+            # Primaria
+            colegio = dict()
+            colegio['inst_educativa'] = fields[5]
+            colegio['departamento'] = fields[12]
+            colegio['provincia'] = fields[13]
+            colegio['distrito'] = fields[14]
+            try:
+                colegio['extranjero'] = fields[18]
+            except IndexError:
+                colegio['extranjero'] = ''
+
+            try:
+                colegio['pais'] = fields[19]
+            except IndexError:
+                colegio['pais'] = ''
+            print(colegio)
+
+            # Secundaria
+            colegio = dict()
+            colegio['inst_educativa'] = fields[6]
 
     def parse_line(self, line):
         line = line.strip()
