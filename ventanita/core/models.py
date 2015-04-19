@@ -17,6 +17,7 @@ class Candidato(models.Model):
     apellido_paterno = models.CharField(max_length=300)
     sexo = models.CharField(max_length=300)
     email = models.CharField(max_length=300)
+    org_politica = models.CharField(max_length=300)
 
     # Familia
     madre = models.CharField(max_length=300)
