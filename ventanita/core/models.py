@@ -8,6 +8,8 @@ from django.db import models
 
 
 class Candidato(models.Model):
+    candidato_jne_id = models.IntegerField(help_text='ID asignado por el JNE')
+
     # Datos Personales
     dni = models.CharField(max_length=8)
     nombres = models.CharField(max_length=300)
@@ -15,6 +17,7 @@ class Candidato(models.Model):
     apellido_paterno = models.CharField(max_length=300)
     sexo = models.CharField(max_length=300)
     email = models.CharField(max_length=300)
+    org_politica = models.CharField(max_length=300)
 
     # Familia
     madre = models.CharField(max_length=300)
@@ -32,18 +35,18 @@ class Candidato(models.Model):
     # Nacimiento
     nacimiento_pais = models.CharField(max_length=300)
     nacimiento_ubigeo = models.CharField(max_length=300)
-    nacimiento_fecha = models.DateField()
+    nacimiento_fecha = models.DateField(null=True, blank=True)
     nacimiento_distrito = models.CharField(max_length=300)
     nacimiento_provincia = models.CharField(max_length=300)
     nacimiento_departamento = models.CharField(max_length=300)
 
     # Residencia
-    residencia_lugar = models.CharField(max_length=300)
-    residencia_ubigeo = models.CharField(max_length=300)
-    residencia_distrito = models.CharField(max_length=300)
-    residencia_tiempo = models.CharField(max_length=300)
-    residencia_provincia = models.CharField(max_length=300)
-    residencia_departamento = models.CharField(max_length=300)
+    residencia_lugar = models.CharField(max_length=300, blank=True)
+    residencia_ubigeo = models.CharField(max_length=300, blank=True)
+    residencia_distrito = models.CharField(max_length=300, blank=True)
+    residencia_tiempo = models.CharField(max_length=300, blank=True)
+    residencia_provincia = models.CharField(max_length=300, blank=True)
+    residencia_departamento = models.CharField(max_length=300, blank=True)
 
     # bienes_muebles = relationship("BienMueble", backref="candidato")
     # bienes_inmuebles = relationship("BienInmueble", backref="candidato")

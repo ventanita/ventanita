@@ -32,8 +32,8 @@ class Command(BaseCommand):
 
         json_file = options['jsonfile']
 
-        with codecs.open(json_file, "r") as handle:
-            dump = handle.readlines()
+        with codecs.open(json_file, "r") as file_handle:
+            dump = file_handle.readlines()
 
         vinculo_objs = []
         for line in dump:
