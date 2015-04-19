@@ -191,6 +191,24 @@ class Experiencia(models.Model):
     candidato = models.ForeignKey('Candidato')
 
 
+class Colegio(models.Model):
+    inst_educativa = models.CharField(max_length=300)
+    pais = models.CharField(max_length=300)
+    departamento = models.CharField(max_length=300)
+    provincia = models.CharField(max_length=300)
+    distrito = models.CharField(max_length=300)
+    estudiante = models.ManyToManyField(Candidato, through='Primaria')
+
+
+class Primaria(models.Model):
+    concluido = models.NullBooleanField()
+    inicio = models.IntegerField()
+    fin = models.IntegerField()
+    tipo_educacion = models.CharField(max_length=300)
+    candidato = models.ForeignKey('Candidato')
+    colegio = models.ForeignKey('Colegio')
+
+
 class Secundaria(models.Model):
     concluido = models.NullBooleanField()
     provincia = models.CharField(max_length=300)
@@ -200,18 +218,6 @@ class Secundaria(models.Model):
     fin = models.IntegerField()
     pais = models.CharField(max_length=300)
     inst_educativa = models.CharField(max_length=300)
-    candidato = models.ForeignKey('Candidato')
-
-
-class Primaria(models.Model):
-    concluido = models.NullBooleanField()
-    provincia = models.CharField(max_length=300)
-    departamento = models.CharField(max_length=300)
-    distrito = models.CharField(max_length=300)
-    pais = models.CharField(max_length=300)
-    inst_educativa = models.CharField(max_length=300)
-    inicio = models.IntegerField()
-    fin = models.IntegerField()
     candidato = models.ForeignKey('Candidato')
 
 
