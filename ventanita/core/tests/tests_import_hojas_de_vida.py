@@ -17,7 +17,7 @@ class TestCommandImportHojasDeVida(TestCase):
     def setUp(self):
         dummy_data = os.path.join(settings.BASE_DIR, '..', '..', 'dummy_data', 'dummy_data0.tsv')
         args = []
-        opts = {'tsvfile': dummy_data}
+        opts = {'tsvfile': dummy_data, 'sheet': '0'}
         cmd = 'import_hojas_de_vida'
         call_command(cmd, *args, **opts)
 
