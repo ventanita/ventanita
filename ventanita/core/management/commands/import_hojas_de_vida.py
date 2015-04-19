@@ -7,6 +7,7 @@ import codecs
 import datetime
 from optparse import make_option
 
+import pyprind
 from django.core.management.base import BaseCommand, CommandError
 
 from core.models import Candidato
@@ -21,24 +22,36 @@ class Command(BaseCommand):
                     dest='tsvfile',
                     help='Enter name of tsv file as argument.'
                     ),
+        make_option('--hoja',
+                    dest='hoja',
+                    help='Enter name of Excel sheet number to import.'
+                    ),
     )
 
     def handle(self, *args, **options):
-        if options['tsvfile'] is None:
+        if options['tsvfile'] is None or options['hoja'] is None:
             error_msg = 'Enter name of tsv file as argument.' \
-                        ' "python manage.py import_hojas_de_vida --tsvfile=hoja0.tsv --settings=ventanita.settings.local'
+                        ' "python manage.py import_hojas_de_vida --tsvfile=hoja0.tsv --hoja=0 --settings=ventanita.settings.local'
             raise CommandError(error_msg)
 
         tsv_file = options['tsvfile']
+        hoja = options['hoja']
 
         with codecs.open(tsv_file, "r") as file_handle:
             dump = file_handle.readlines()
 
         items = []
+        n = len(dump)
+        bar = pyprind.ProgBar(n)
         for line in dump:
-            item = self.parse_line(line)
+            item = None
+
+            if hoja == '0':
+                item = self.parse_line(line)
+
             if item is not None:
                 items.append(Candidato(**item))
+            bar.update()
         Candidato.objects.bulk_create(items)
 
     def parse_line(self, line):

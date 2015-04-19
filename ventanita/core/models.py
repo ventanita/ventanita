@@ -53,6 +53,7 @@ class Candidato(models.Model):
     # otra_experiencia = relationship("OtraExperiencia", backref="candidato")
     # militancia = relationship("Militancia", backref="candidato")
     # civil = relationship("Civil", backref="candidato")
+
     # educacion_basica_primaria = relationship("Primaria", backref="candidato")
     # educacion_basica_secundaria = relationship("Secundaria", backref="candidato")
     # educacion_superior_postgrado = relationship("Postgrado", backref="candidato")
@@ -220,7 +221,10 @@ class Observacion(models.Model):
     candidato = models.ForeignKey('Candidato')
 
 
+# Registro de morosos por alimentos. REDAM.
+
 class DeudorRedam(models.Model):
+    """Demandado"""
     dni = models.CharField(max_length=8)
     apellido_paterno = models.CharField(max_length=100)
     apellido_materno = models.CharField(max_length=100)
@@ -230,6 +234,7 @@ class DeudorRedam(models.Model):
 
 
 class DeudorRedamVinculo(models.Model):
+    """Demandante"""
     deudor = models.ForeignKey('DeudorRedam')
     vinculo = models.CharField(max_length=100)
     nombre_completo = models.CharField(max_length=300)
