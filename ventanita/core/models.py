@@ -194,6 +194,7 @@ class Experiencia(models.Model):
 class Colegio(models.Model):
     inst_educativa = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
+    extranjero = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
     provincia = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
