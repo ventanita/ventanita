@@ -1,6 +1,8 @@
 [![Stories in Ready](https://badge.waffle.io/ventanita/ventanita.png?label=ready&title=Ready)](https://waffle.io/ventanita/ventanita)
 [![Build Status](https://travis-ci.org/ventanita/ventanita.svg?branch=master)](https://travis-ci.org/ventanita/ventanita)
 
+[![Throughput Graph](https://graphs.waffle.io/ventanita/ventanita/throughput.svg)](https://waffle.io/ventanita/ventanita/metrics)
+
 #Esta es ventanita
 
 [![Join the chat at https://gitter.im/aniversarioperu/ventanita](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aniversarioperu/ventanita?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
