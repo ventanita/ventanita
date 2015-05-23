@@ -13,3 +13,5 @@ test:
 coverage: test
 	coverage report -m
 	coverage html
+
+.PHONY: migrations serve test coverage
