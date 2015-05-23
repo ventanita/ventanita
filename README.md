@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/ventanita/ventanita.png?label=ready&title=Ready)](https://waffle.io/ventanita/ventanita)
 [![Build Status](https://travis-ci.org/ventanita/ventanita.svg?branch=master)](https://travis-ci.org/ventanita/ventanita)
 
 #Esta es ventanita
