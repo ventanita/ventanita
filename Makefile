@@ -1,3 +1,11 @@
+.PHONY: help migrations serve test coverage
+
+help:
+	@echo "  migrations   to apply model migrations"
+	@echo "  serve        to start application in localhost"
+	@echo "  test         to run unittests"
+	@echo "  coverage     to estimate code coverage by the unittests"
+
 migrations:
 	python ventanita/manage.py makemigrations --settings=ventanita.settings.local
 	python ventanita/manage.py migrate --settings=ventanita.settings.local
@@ -13,5 +21,3 @@ test:
 coverage: test
 	coverage report -m
 	coverage html
-
-.PHONY: migrations serve test coverage
