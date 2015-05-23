@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/aniversarioperu/ventanita.svg?branch=master)](https://travis-ci.org/aniversarioperu/ventanita)
+[![Build Status](https://travis-ci.org/ventanita/ventanita.svg?branch=master)](https://travis-ci.org/ventanita/ventanita)
 
 #Esta es ventanita
 
