@@ -2,7 +2,7 @@ Recomendaciones a los colaboradores
 ===================================
 
 La lista de tareas para hacer están marcadas según nivel de dificultad:
-`<https://github.com/aniversarioperu/ventanita/issues>`_.
+`<https://github.com/ventanita/ventanita/issues>`_.
 Si tienes ideas o encuentras cosas para corregir, mejorar, bugs, puedes crear
 nuevos *issues* o comentar en los existentes.
 
@@ -31,7 +31,8 @@ Antes de hacer *pull request* adicionales
 -----------------------------------------
 
 1. Ir a tu rama master (*master branch*): ``git checkout master``
-2. Agregar a tu repositorio el *upstream repo URL*: ``git remote add upstream https://github.com/aniversarioperu/ventanita.git``
+2. Agregar a tu repositorio el *upstream repo URL*:
+   ``git remote add upstream https://github.com/ventanita/ventanita.git``
 3. Actualizar tu copia del repositorio: ``git fetch upstream``
 4. ``git merge upstream/master``
 5. Repetir las instrucciones de arriba desde el paso 2.
