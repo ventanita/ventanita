@@ -2,8 +2,12 @@
 # This code is part of the Ventanita distribution and governed by its
 # license. Please see the LICENSE file that should have been included
 # as part of this package.
-from django.http import HttpResponseRedirect
+from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponseRedirect('/demo/')
+    return render(request, 'demo/index.html')
+
+
+def candidatos_con_sentencias(request):
+    return render(request, 'demo/1400_candidatos.html')
