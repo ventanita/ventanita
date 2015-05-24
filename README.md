@@ -47,6 +47,17 @@ funciones y herramientas al software. Estas instrucciones asumen que tienes una 
 Ubuntu Linux.
 
 ### Instalar Ventanita
+Es buena idea crear un **virtual environment** para que sea tu área de trabajo. Ver más info sobre
+la instalación de [virtualenvwrapper aquí](https://virtualenvwrapper.readthedocs.org/en/latest/).
+
+```shell
+sudo apt-get install python-pip
+sudo pip install virtualenvwrapper
+source /usr/local/bin/virtualenvwrapper.sh
+mkvirtualenv -p /usr/bin/python3 ventanita
+workon ventanita
+```
+
 Es necesario que hagas un **fork** a este repositorio para tenerlo en tu cuenta de Github. Luego 
 puedes clonar el respositorio en tu computadora (para eso debes tener instalado el software **git**).
 
@@ -61,34 +72,50 @@ tu username en Github:
 git clone https://github.com/aniversarioperu/ventanita.git
 ```
 
-Es buena idea crear un **virtual environment** para que sea tu área de trabajo. Ver más info sobre
-la instalación de [virtualenvwrapper aquí](https://virtualenvwrapper.readthedocs.org/en/latest/).
-
-```shell
-mkvirtualenv -p /usr/bin/python3 ventanita
-workon ventanita
-```
-
 Ventanita depende de varias "librerías" en Python. Para instalarlas en tu **virtual environment**:
 ```shell
+sudo apt-get install libpq-dev python3-dev
 cd ventanita
 pip install -r requirements/testing.txt
 ```
 
 ### Instalar PostgreSQL
 Ventanita almacena todos sus datos en una base de datos PostgreSQL. 
-[Aquí está un excelente tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04)
-para la instalación de este software.
+Para instalar PostgreSQL ([más info aquí](http://www.postgresql.org/docs/9.3/static/creating-cluster.html)):
+
+```shell
+sudo apt-get install postgresql postgresql-contrib
+sudo mkdir -p /usr/local/pgsql/data
+sudo chown postgres:postgres /usr/local/pgsql/data
+sudo -i -u postgres
+PATH=/usr/lib/postgresql/9.3/bin:$PATH
+export PATH
+pg_ctl -D /usr/local/pgsql/data initdb
+postgres -D /usr/local/pgsql/data > logfile 2>&1 &
+```
+
+Crea una *database* para Ventanita:
+```sql
+psql
+postgres=# ALTER ROLE postgres WITH PASSWORD 'ljoiu234';
+postgres=# CREATE DATABASE ventanita;
+```
 
 ## Configurar Ventanita
 Puedes poner tus datos de desarrollo local en un archivo ``config.json``,
 asegurándote que haya sido incluido en tu ``.gitignore``.
 
+```shell
+touch config.json
+```
+
+Este debe ser el contenido de tu archivo ``config.json``:
+
 ```javascript
 {
     "SECRET_KEY": "crear una clave secreta",
-    "DB_USER": "usuario de base de datos postgreSQL",
-    "DB_PASS": "tu contraseña para la base de datos",
+    "DB_USER": "postgres",
+    "DB_PASS": "ljoiu234",
     "DB_NAME": "ventanita",
     "DB_PORT": "5432",
     "DB_HOST": "localhost"
