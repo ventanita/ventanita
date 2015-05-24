@@ -15,7 +15,13 @@ Ventanita is un proyecto desarrollado por voluntarios. Tus contribuciones y mejo
 al código son bienvenidas.
 
 ## Contenido
-* [Antecedentes](#antecedentes)
+* [Antecedentes](#antecedentes).
+* [Objetivo principal](#objetivo-princial).
+* [Cómo instalar Ventanita?](#como-instalar-ventanita).
+* [Configurar Ventanita](#configurar-ventanita).
+* [Ejecutar la aplicación](#ejecutar-la-aplicación).
+* [Scripts para importar datos](#scripts-para-importar-datos)
+* [Licencia](#licencia)
 
 ## Antecedentes
 En las pasada campaña de Elecciones Regionales y Municipales 2014 ejecutamos el
@@ -35,11 +41,46 @@ partidos políticos que se presenten a las Elecciones 2016.
 Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/home/>.
 
 
-## Dependencias
-* python3
-* ``pip install -r requirements/testing.txt``
+## Cómo instalar Ventanita?
+Sigue estos pasos para instalar Ventanita en tu computadora y así poder modificar, corregir y agregar
+funciones y herramientas al software. Estas instrucciones asumen que tienes una computadora con 
+Ubuntu Linux.
 
-## Configuración
+### Instalar Ventanita
+Es necesario que hagas un **fork** a este repositorio para tenerlo en tu cuenta de Github. Luego 
+puedes clonar el respositorio en tu computadora (para eso debes tener instalado el software **git**).
+
+```shell
+sudo apt-get install git
+```
+
+Usa el siguiente comando para clonar el repo en tu computadora (reemplaza **aniversarioperu** con
+tu username en Github:
+
+```shell
+git clone https://github.com/aniversarioperu/ventanita.git
+```
+
+Es buena idea crear un **virtual environment** para que sea tu área de trabajo. Ver más info sobre
+la instalación de [virtualenvwrapper aquí](https://virtualenvwrapper.readthedocs.org/en/latest/).
+
+```shell
+mkvirtualenv -p /usr/bin/python3 ventanita
+workon ventanita
+```
+
+Ventanita depende de varias "librerías" en Python. Para instalarlas en tu **virtual environment**:
+```shell
+cd ventanita
+pip install -r requirements/testing.txt
+```
+
+### Instalar PostgreSQL
+Ventanita almacena todos sus datos en una base de datos PostgreSQL. 
+[Aquí está un excelente tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04)
+para la instalación de este software.
+
+## Configurar Ventanita
 Puedes poner tus datos de desarrollo local en un archivo ``config.json``,
 asegurándote que haya sido incluido en tu ``.gitignore``.
 
@@ -58,8 +99,12 @@ asegurándote que haya sido incluido en tu ``.gitignore``.
 Puede usar el ``Makefile`` de ventanita:
 
 ```shell
-> make serve
+make migrations
+make serve
 ```
+
+Podrás ver la Ventanita en todo su esplendor apuntado tu navegador web a esta dirección:
+``http://localhost:8000``
 
 ## Scripts para importar datos
 Van en el folder ``scripts_for_imports``:
@@ -71,7 +116,6 @@ Van en el folder ``scripts_for_imports``:
 * Importar hojas_de_vida: 
   ``python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data0.tsv --settings=ventanita.settings.local``
   
-
 ## Licencia
 Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
 COPYING y LICENSE).
