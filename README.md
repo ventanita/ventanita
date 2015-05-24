@@ -16,12 +16,12 @@ al código son bienvenidas.
 
 ## Contenido
 * [Antecedentes](#antecedentes).
-* [Objetivo principal](#objetivo-princial).
-* [Cómo instalar Ventanita?](#como-instalar-ventanita).
+* [Objetivo principal](#objetivo-principal).
+* [Cómo instalar Ventanita?](#cómo-instalar-ventanita)
 * [Configurar Ventanita](#configurar-ventanita).
 * [Ejecutar la aplicación](#ejecutar-la-aplicación).
-* [Scripts para importar datos](#scripts-para-importar-datos)
-* [Licencia](#licencia)
+* [Scripts para importar datos](#scripts-para-importar-datos).
+* [Licencia](#licencia).
 
 ## Antecedentes
 En las pasada campaña de Elecciones Regionales y Municipales 2014 ejecutamos el
