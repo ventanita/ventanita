@@ -102,11 +102,13 @@ postgres=# CREATE DATABASE ventanita;
 ```
 
 ## Configurar Ventanita
-Puedes poner tus datos de desarrollo local en un archivo ``config.json``,
-asegurándote que haya sido incluido en tu ``.gitignore``.
+Luego de salir del usuario ``postgres`` (luego de tipear ``exit``), puedes poner tus datos de
+desarrollo local en un archivo ``config.json``, asegurándote que haya sido incluido en tu
+``.gitignore``.
 
 ```shell
 touch config.json
+echo "config.json" >> .gitignore
 ```
 
 Este debe ser el contenido de tu archivo ``config.json``:
