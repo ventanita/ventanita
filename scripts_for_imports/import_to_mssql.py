@@ -7,21 +7,27 @@ import _mssql
 import csv
 
 
+CSV_DATA_FILE = '../dummy_data/dummy_data0.tsv'
+DB_SERVER = 's10.winhost.com:1433'
+DB_USERNAME = 'DB_76507_ventanita_user'
+DB_PASSWORD = '123abc$'
+DB_NAME = 'DB_76507_ventanita'
+
 def replace_quote(content):
-    if content != '':
+    if content:
         return content.replace("'", "")
 
 
 def replace_empty(content):
-    if content == '':
+    if not content:
         return 0
 
 
 def importar(row):
-    conn = _mssql.connect(server='s10.winhost.com:1433',
-                          user='DB_76507_ventanita_user',
-                          password='123abc$',
-                          database='DB_76507_ventanita')
+    conn = _mssql.connect(server=DB_SERVER,
+                          user=DB_USERNAME,
+                          password=DB_PASSWORD,
+                          database=DB_NAME)
     query = "INSERT INTO Candidatos VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', {21})".format(
         replace_quote(row['DNI']),
         replace_quote(row['DEPARTAMENTO AL QUE POSTULA']),
@@ -50,19 +56,13 @@ def importar(row):
 
 
 def get_total_lines():
-    with open('../dummy_data/dummy_data0.tsv', 'rU') as csvfile:
-        reader = csv.DictReader(csvfile, delimiter="\t")
-        i = 0
-        for row in reader:
-            i += 1
-        return i
+    with open(CSV_DATA_FILE, 'rU') as csvfile:
+        return sum(1 for _ in csv.DictReader(csvfile, delimiter="\t"))
 
 
-with open('../dummy_data/dummy_data0.tsv', 'rU') as csvfile:
+with open(CSV_DATA_FILE, 'rU') as csvfile:
     reader = csv.DictReader(csvfile, delimiter="\t")
     total = get_total_lines()
-    i = 0
-    for row in reader:
+    for i, row in enumerate(reader, 1):
         importar(row)
-        i += 1
         print 'import {0} of {1}'.format(i, total)
