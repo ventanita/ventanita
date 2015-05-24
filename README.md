@@ -14,6 +14,15 @@ congresales 2016.
 Ventanita is un proyecto desarrollado por voluntarios. Tus contribuciones y mejoras
 al código son bienvenidas.
 
+## Contenido
+* [Antecedentes](#antecedentes).
+* [Objetivo principal](#objetivo-principal).
+* [Cómo instalar Ventanita?](#cómo-instalar-ventanita)
+* [Configurar Ventanita](#configurar-ventanita).
+* [Ejecutar la aplicación](#ejecutar-la-aplicación).
+* [Scripts para importar datos](#scripts-para-importar-datos).
+* [Licencia](#licencia).
+
 ## Antecedentes
 En las pasada campaña de Elecciones Regionales y Municipales 2014 ejecutamos el
 proyecto **Verita** <http://utero.pe/tag/verita/>.
@@ -31,19 +40,84 @@ partidos políticos que se presenten a las Elecciones 2016.
 
 Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/home/>.
 
-## Dependencias
-* python3
-* ``pip install -r requirements/testing.txt``
 
-## Configuración
-Puedes poner tus datos de desarrollo local en un archivo ``config.json``,
-asegurándote que haya sido incluido en tu ``.gitignore``.
+## Cómo instalar Ventanita?
+Sigue estos pasos para instalar Ventanita en tu computadora y así poder modificar, corregir y agregar
+funciones y herramientas al software. Estas instrucciones asumen que tienes una computadora con 
+Ubuntu Linux.
+
+### Instalar Ventanita
+Es buena idea crear un **virtual environment** para que sea tu área de trabajo. Ver más info sobre
+la instalación de [virtualenvwrapper aquí](https://virtualenvwrapper.readthedocs.org/en/latest/).
+
+```shell
+sudo apt-get install python-pip
+sudo pip install virtualenvwrapper
+source /usr/local/bin/virtualenvwrapper.sh
+mkvirtualenv -p /usr/bin/python3 ventanita
+workon ventanita
+```
+
+Es necesario que hagas un **fork** a este repositorio para tenerlo en tu cuenta de Github. Luego 
+puedes clonar el respositorio en tu computadora (para eso debes tener instalado el software **git**).
+
+```shell
+sudo apt-get install git
+```
+
+Usa el siguiente comando para clonar el repo en tu computadora (reemplaza **aniversarioperu** con
+tu username en Github:
+
+```shell
+git clone https://github.com/aniversarioperu/ventanita.git
+```
+
+Ventanita depende de varias "librerías" en Python. Para instalarlas en tu **virtual environment**:
+```shell
+sudo apt-get install libpq-dev python3-dev
+cd ventanita
+pip install -r requirements/testing.txt
+```
+
+### Instalar PostgreSQL
+Ventanita almacena todos sus datos en una base de datos PostgreSQL. 
+Para instalar PostgreSQL ([más info aquí](http://www.postgresql.org/docs/9.3/static/creating-cluster.html)):
+
+```shell
+sudo apt-get install postgresql postgresql-contrib
+sudo mkdir -p /usr/local/pgsql/data
+sudo chown postgres:postgres /usr/local/pgsql/data
+sudo -i -u postgres
+PATH=/usr/lib/postgresql/9.3/bin:$PATH
+export PATH
+pg_ctl -D /usr/local/pgsql/data initdb
+postgres -D /usr/local/pgsql/data > logfile 2>&1 &
+```
+
+Crea una *database* para Ventanita:
+```sql
+psql
+postgres=# ALTER ROLE postgres WITH PASSWORD 'ljoiu234';
+postgres=# CREATE DATABASE ventanita;
+```
+
+## Configurar Ventanita
+Luego de salir del usuario ``postgres`` (luego de tipear ``exit``), puedes poner tus datos de
+desarrollo local en un archivo ``config.json``, asegurándote que haya sido incluido en tu
+``.gitignore``.
+
+```shell
+touch config.json
+echo "config.json" >> .gitignore
+```
+
+Este debe ser el contenido de tu archivo ``config.json``:
 
 ```javascript
 {
     "SECRET_KEY": "crear una clave secreta",
-    "DB_USER": "usuario de base de datos postgreSQL",
-    "DB_PASS": "tu contraseña para la base de datos",
+    "DB_USER": "postgres",
+    "DB_PASS": "ljoiu234",
     "DB_NAME": "ventanita",
     "DB_PORT": "5432",
     "DB_HOST": "localhost"
@@ -54,8 +128,12 @@ asegurándote que haya sido incluido en tu ``.gitignore``.
 Puede usar el ``Makefile`` de ventanita:
 
 ```shell
-> make serve
+make migrations
+make serve
 ```
+
+Podrás ver la Ventanita en todo su esplendor apuntado tu navegador web a esta dirección:
+``http://localhost:8000``
 
 ## Scripts para importar datos
 Van en el folder ``scripts_for_imports``:
@@ -67,7 +145,6 @@ Van en el folder ``scripts_for_imports``:
 * Importar hojas_de_vida: 
   ``python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data0.tsv --settings=ventanita.settings.local``
   
-
 ## Licencia
 Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
 COPYING y LICENSE).
