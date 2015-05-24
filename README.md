@@ -14,6 +14,9 @@ congresales 2016.
 Ventanita is un proyecto desarrollado por voluntarios. Tus contribuciones y mejoras
 al código son bienvenidas.
 
+## Contenido
+* [Antecedentes](#antecedentes)
+
 ## Antecedentes
 En las pasada campaña de Elecciones Regionales y Municipales 2014 ejecutamos el
 proyecto **Verita** <http://utero.pe/tag/verita/>.
@@ -30,6 +33,7 @@ que usuarios puedan dar evaluar rápidamente la idoneidad de los candidatos y
 partidos políticos que se presenten a las Elecciones 2016.
 
 Idealmente algo parecido al aplicativo uterino <http://www.selallevanfacil.info/home/>.
+
 
 ## Dependencias
 * python3
