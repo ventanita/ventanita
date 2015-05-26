@@ -17,3 +17,9 @@ def candidatos_con_sentencias(request):
 
 def las_20_agrupaciones(request):
     return render(request, 'demo/20_agrupaciones.html')
+
+def sentenciados_homicidio(request):
+    return render(request, 'demo/sentenciados_homicidio.html')
+
+def sentenciados_tid(request):
+    return render(request, 'demo/sentenciados_tid.html')
