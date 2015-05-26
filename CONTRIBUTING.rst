@@ -38,3 +38,9 @@ Antes de hacer *pull request* adicionales
 3. Actualizar tu copia del repositorio: ``git fetch upstream``
 4. ``git merge upstream/master``
 5. Repetir las instrucciones de arriba desde el paso 2.
+
+Unit tests
+----------
+Sería chévere que también incluyas uno o más unit tests para tu código en Python.
+Así nos aseguramos que posteriores modificaciones no vayan a romper tu código de
+manera accidental.
