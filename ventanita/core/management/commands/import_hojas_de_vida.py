@@ -43,13 +43,13 @@ class Command(BaseCommand):
             dump = file_handle.readlines()
 
         items = []
-        n = len(dump)
-        bar = pyprind.ProgBar(n)
 
         candidatos_objects = Candidato.objects.all()
         candidatos_dict = self.as_dict(candidatos_objects)
 
         if sheet == '0':
+            n = len(dump)
+            bar = pyprind.ProgBar(n)
             for line in dump:
                 item = self.parse_line(line)
                 if item is not None:
@@ -64,38 +64,21 @@ class Command(BaseCommand):
 
     def import_institucion_educativa(self, dump):
         instituciones = []
+        n = len(dump)
+        bar = pyprind.ProgBar(n)
         for line in dump:
             fields = line.strip().split('\t')
 
-            nombre_primaria = get_item_from_list(fields, 5)
-            departamento_primaria = get_item_from_list(fields, 12)
-            provincia_primaria = get_item_from_list(fields, 13)
-            distrito_primaria = get_item_from_list(fields, 14)
+            this_inst_edu = get_institucion_primaria(fields)
+            if this_inst_edu not in instituciones:
+                instituciones.append(this_inst_edu)
 
-            nombre_secundaria = get_item_from_list(fields, 6)
-            departamento_secundaria = get_item_from_list(fields, 17)
-            provincia_secundaria = get_item_from_list(fields, 18)
-            distrito_secundaria = get_item_from_list(fields, 19)
+            this_inst_edu = get_institucion_secundaria(fields)
+            if this_inst_edu not in instituciones:
+                instituciones.append(this_inst_edu)
+            bar.update()
 
-            extranjero = get_item_from_list(fields, 20)
-            pais = get_item_from_list(fields, 21)
-
-            # primaria
-            this_inst_edu = InstitucionEducativa(nombre=nombre_primaria,
-                                                 departamento=departamento_primaria,
-                                                 provincia=provincia_primaria,
-                                                 distrito=distrito_primaria,
-                                                 extranjero=extranjero, pais=pais)
-            instituciones.append(this_inst_edu)
-
-            # secundaria
-            this_inst_edu = InstitucionEducativa(nombre=nombre_secundaria,
-                                                 departamento=departamento_secundaria,
-                                                 provincia=provincia_secundaria,
-                                                 distrito=distrito_secundaria,
-                                                 extranjero=extranjero, pais=pais)
-            instituciones.append(this_inst_edu)
-        InstitucionEducativa.objects.bulk_create(instituciones)
+        upload_instituciones(instituciones)
 
     def parse_line(self, line):
         line = line.strip()
@@ -175,3 +158,47 @@ class Command(BaseCommand):
         for i in candidatos_objects:
             mydict[i.dni] = i
         return mydict
+
+
+def get_institucion_primaria(fields):
+    nombre_primaria = get_item_from_list(fields, 5)
+    departamento_primaria = get_item_from_list(fields, 12)
+    provincia_primaria = get_item_from_list(fields, 13)
+    distrito_primaria = get_item_from_list(fields, 14)
+    extranjero = get_item_from_list(fields, 20)
+    pais = get_item_from_list(fields, 21)
+    this_inst_edu = {
+        'nombre': nombre_primaria,
+        'departamento': departamento_primaria,
+        'provincia': provincia_primaria,
+        'distrito': distrito_primaria,
+        'extranjero': extranjero,
+        'pais': pais,
+    }
+    return this_inst_edu
+
+
+def get_institucion_secundaria(fields):
+    nombre_secundaria = get_item_from_list(fields, 6)
+    departamento_secundaria = get_item_from_list(fields, 17)
+    provincia_secundaria = get_item_from_list(fields, 18)
+    distrito_secundaria = get_item_from_list(fields, 19)
+    extranjero = get_item_from_list(fields, 20)
+    pais = get_item_from_list(fields, 21)
+    this_inst_edu = {
+        'nombre': nombre_secundaria,
+        'departamento': departamento_secundaria,
+        'provincia': provincia_secundaria,
+        'distrito': distrito_secundaria,
+        'extranjero': extranjero,
+        'pais': pais,
+    }
+    return this_inst_edu
+
+
+def upload_instituciones(instituciones):
+    objs = []
+    for i in instituciones:
+        this_inst = InstitucionEducativa(**i)
+        objs.append(this_inst)
+    InstitucionEducativa.objects.bulk_create(objs)
