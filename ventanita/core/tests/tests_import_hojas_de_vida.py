@@ -11,6 +11,8 @@ from django.conf import settings
 from django.test import TestCase
 
 from core.models import Candidato
+from core.models import Estudio
+from core.models import InstitucionEducativa
 
 
 class TestCommandImportHojasDeVida(TestCase):
@@ -19,6 +21,10 @@ class TestCommandImportHojasDeVida(TestCase):
         args = []
         opts = {'tsvfile': dummy_data, 'sheet': '0'}
         cmd = 'import_hojas_de_vida'
+        call_command(cmd, *args, **opts)
+
+        dummy_data = os.path.join(settings.BASE_DIR, '..', '..', 'dummy_data', 'dummy_data1.tsv')
+        opts = {'tsvfile': dummy_data, 'sheet': '1'}
         call_command(cmd, *args, **opts)
 
     def test_import_fail(self):
@@ -30,5 +36,20 @@ class TestCommandImportHojasDeVida(TestCase):
     def test_import(self):
         c = Candidato.objects.get(dni='00020789')
         result = c.nombres
+        expected = 'ANGELA EDITH'
+        self.assertEqual(expected, result)
+
+    def test_import_colegio(self):
+        c = Candidato.objects.get(dni='00020789')
+        e = Estudio(curso='biologia', candidato=c, )
+        e.save()
+        result = Estudio.objects.all().values()
+        expected = 'ANGELA EDITH'
+        self.assertEqual(expected, result)
+
+    def test_import_institucion_educativa(self):
+        # i = InstitucionEducativa.objects.get(nombre='MIGUEL GRAU').values()
+        i = InstitucionEducativa.objects.all().values('nombre')
+        result = i
         expected = 'ANGELA EDITH'
         self.assertEqual(expected, result)

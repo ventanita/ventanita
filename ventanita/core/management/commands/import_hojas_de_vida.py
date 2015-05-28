@@ -11,6 +11,7 @@ import pyprind
 from django.core.management.base import BaseCommand, CommandError
 
 from core.models import Candidato
+from core.models import InstitucionEducativa
 
 
 class Command(BaseCommand):
@@ -54,39 +55,48 @@ class Command(BaseCommand):
                     items.append(Candidato(**item))
                 bar.update()
         elif sheet == '1':
-            self.import_colegios(dump)
+            print("Sheet 1")
+            self.import_institucion_educativa(dump)
             # item = self.parse_line_sheet1(line, candidatos_dict)
 
         Candidato.objects.bulk_create(items)
 
-    def import_colegios(self, dump):
-        colegios = set()
+    def import_institucion_educativa(self, dump):
+        instituciones = []
         for line in dump:
-            line = line.strip()
-            # line = line.replace('\t\t', '\t')
-            fields = line.split('\t')
-            # if fields[1] == 'DNI':
-            #     continue
-            # Primaria
-            colegio = dict()
-            colegio['inst_educativa'] = fields[5]
-            colegio['departamento'] = fields[12]
-            colegio['provincia'] = fields[13]
-            colegio['distrito'] = fields[14]
+            fields = line.strip().split('\t')
             try:
-                colegio['extranjero'] = fields[18]
+                provincia_primaria = fields[13]
             except IndexError:
-                colegio['extranjero'] = ''
+                provincia_primaria = ''
 
             try:
-                colegio['pais'] = fields[19]
+                provincia_secundaria = fields[18]
             except IndexError:
-                colegio['pais'] = ''
-            print(colegio)
+                provincia_secundaria = ''
 
-            # Secundaria
-            colegio = dict()
-            colegio['inst_educativa'] = fields[6]
+            try:
+                extranjero = fields[20]
+            except IndexError:
+                extranjero = ''
+
+            try:
+                pais = fields[21]
+            except IndexError:
+                pais = ''
+
+            # primaria
+            this_inst_edu = InstitucionEducativa(nombre=fields[5], departamento=fields[12],
+                                                 provincia=provincia_primaria, distrito=fields[14],
+                                                 extranjero=extranjero, pais=pais)
+            instituciones.append(this_inst_edu)
+
+            # secundaria
+            this_inst_edu = InstitucionEducativa(nombre=fields[6], departamento=fields[17],
+                                                 provincia=provincia_secundaria, distrito=fields[19],
+                                                 extranjero=extranjero, pais=pais)
+            instituciones.append(this_inst_edu)
+        InstitucionEducativa.objects.bulk_create(instituciones)
 
     def parse_line(self, line):
         line = line.strip()
