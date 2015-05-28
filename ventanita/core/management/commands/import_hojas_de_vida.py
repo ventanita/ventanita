@@ -42,12 +42,8 @@ class Command(BaseCommand):
         with codecs.open(tsv_file, "r") as file_handle:
             dump = file_handle.readlines()
 
-        items = []
-
-        candidatos_objects = Candidato.objects.all()
-        candidatos_dict = self.as_dict(candidatos_objects)
-
         if sheet == '0':
+            items = []
             n = len(dump)
             bar = pyprind.ProgBar(n)
             for line in dump:
@@ -55,12 +51,9 @@ class Command(BaseCommand):
                 if item is not None:
                     items.append(Candidato(**item))
                 bar.update()
+            Candidato.objects.bulk_create(items)
         elif sheet == '1':
-            print("Sheet 1")
             self.import_institucion_educativa(dump)
-            # item = self.parse_line_sheet1(line, candidatos_dict)
-
-        Candidato.objects.bulk_create(items)
 
     def import_institucion_educativa(self, dump):
         instituciones = []
