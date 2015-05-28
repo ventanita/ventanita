@@ -64,6 +64,7 @@ class Command(BaseCommand):
 
     def import_institucion_educativa(self, dump):
         instituciones = []
+
         n = len(dump)
         bar = pyprind.ProgBar(n)
         for line in dump:
