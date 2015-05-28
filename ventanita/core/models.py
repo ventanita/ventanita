@@ -166,7 +166,7 @@ class Estudio(models.Model):
 
     candidato = models.ForeignKey('Candidato')
     institucion_educativa = models.ForeignKey('InstitucionEducativa')
-    tipo_de_estudio = models.CharField(choices=TYPE_STUDY_CHOICES, blank=True,
+    tipo_de_estudio = models.CharField(max_length=300, choices=TYPE_STUDY_CHOICES, blank=True,
                                        help_text='Colegio, instituto, universidad y grado de instrucción.')
     concluido = models.NullBooleanField()
     inicio = models.IntegerField()
