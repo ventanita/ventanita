@@ -9,9 +9,11 @@ from optparse import make_option
 
 import pyprind
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
 
 from core.models import Candidato
 from core.models import InstitucionEducativa
+from core.models import Estudio
 from core.utils import get_item_from_list
 
 
@@ -54,6 +56,7 @@ class Command(BaseCommand):
             Candidato.objects.bulk_create(items)
         elif sheet == '1':
             self.import_institucion_educativa(dump)
+            self.import_education_for_candidate(dump)
 
     def import_institucion_educativa(self, dump):
         instituciones = []
@@ -73,6 +76,43 @@ class Command(BaseCommand):
             bar.update()
 
         upload_instituciones(instituciones)
+
+    def import_education_for_candidate(self, dump):
+        estudios = []
+        n = len(dump)
+        bar = pyprind.ProgBar(n)
+        print("Importing studies for candidate")
+        for line in dump:
+            fields = line.strip().split('\t')
+            if fields[1] == 'DNI':
+                continue
+            candidato = self.get_candidato(fields)
+            colegio_primaria_obj = self.get_colegio_primaria(fields)
+            educacion_primaria_inicio, educacion_primaria_fin = self.get_primaria_rango(fields)
+            e = Estudio(candidato=candidato, institucion_educativa=colegio_primaria_obj,
+                        tipo_de_estudio='primaria', inicio=educacion_primaria_inicio,
+                        fin=educacion_primaria_fin)
+            estudios.append(e)
+            bar.update()
+        Estudio.objects.bulk_create(estudios)
+
+    def get_candidato(self, fields):
+        dni = fields[1]
+        candidato = Candidato.objects.get(dni=dni)
+        return candidato
+
+    def get_colegio_primaria(self, fields):
+        colegio_primaria = get_institucion_primaria(fields)
+        cole_obj = InstitucionEducativa.objects.get(nombre=colegio_primaria['nombre'],
+                                                    departamento=colegio_primaria['departamento'],
+                                                    provincia=colegio_primaria['provincia'],
+                                                    distrito=colegio_primaria['distrito'])
+        return cole_obj
+
+    def get_primaria_rango(self, fields):
+        inicio = get_item_from_list(fields, 7)
+        fin = get_item_from_list(fields, 8)
+        return inicio, fin
 
     def parse_line(self, line):
         line = line.strip()
@@ -125,23 +165,6 @@ class Command(BaseCommand):
                 item['residencia_tiempo'] = fields[21]
             except IndexError:
                 item['residencia_tiempo'] = ''
-
-            if item['dni'] != 'DNI':
-                return item
-        return None
-
-    def parse_line_sheet1(self, line, candidatos):
-        line = line.strip()
-        if line != '':
-            fields = line.split('\t')
-            item = dict()
-            dni = fields[1]
-
-            if dni == 'DNI':
-                return None
-
-            print(">>>>>>>dni", dni)
-            print(candidatos[dni].dni)
 
             if item['dni'] != 'DNI':
                 return item

@@ -3,7 +3,6 @@
 # license. Please see the LICENSE file that should have been included
 # as part of this package.
 
-import json
 import os
 
 from django.core.management import call_command
@@ -40,13 +39,11 @@ class TestCommandImportHojasDeVida(TestCase):
         expected = 'ANGELA EDITH'
         self.assertEqual(expected, result)
 
-    def test_import_colegio(self):
-        c = Candidato.objects.get(dni='00020789')
-        e = Estudio(curso='biologia', candidato=c, )
-        e.save()
-        result = Estudio.objects.all().values()
-        expected = 'ANGELA EDITH'
-        self.assertEqual(expected, result)
+    def test_import_education_for_candidate(self):
+        c = Candidato.objects.get(dni='23202638')
+        result = Estudio.objects.get(candidato=c, tipo_de_estudio='primaria')
+        expected = 'I. E SAN MIGUEL'
+        self.assertEqual(expected, result.institucion_educativa.nombre)
 
     def test_import_institucion_educativa(self):
         result = InstitucionEducativa.objects.all().values('nombre', 'departamento', 'provincia',
