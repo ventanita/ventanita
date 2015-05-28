@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['tsvfile'] is None or options['sheet'] is None:
-            error_msg = 'Enter name of tsv file as argument.' \
+            error_msg = 'Enter name of tsv file and sheet number as argument.' \
                         ' "python manage.py import_hojas_de_vida --tsvfile=hoja0.tsv --sheet=0 --settings=ventanita.settings.local'
             raise CommandError(error_msg)
 
@@ -66,7 +66,7 @@ class Command(BaseCommand):
             # line = line.replace('\t\t', '\t')
             fields = line.split('\t')
             # if fields[1] == 'DNI':
-                # continue
+            #     continue
             # Primaria
             colegio = dict()
             colegio['inst_educativa'] = fields[5]
@@ -156,7 +156,6 @@ class Command(BaseCommand):
 
             print(">>>>>>>dni", dni)
             print(candidatos[dni].dni)
-
 
             if item['dni'] != 'DNI':
                 return item

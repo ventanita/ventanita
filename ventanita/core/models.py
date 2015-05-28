@@ -128,35 +128,6 @@ class Postgrado(models.Model):
     candidato = models.ForeignKey('Candidato')
 
 
-class Tecnico(models.Model):
-    concluido = models.NullBooleanField()
-    provincia = models.CharField(max_length=300)
-    curso = models.CharField(max_length=300)
-    distrito = models.CharField(max_length=300)
-    especialidad = models.CharField(max_length=300)
-    departamento = models.CharField(max_length=300)
-    inicio = models.IntegerField()
-    fin = models.IntegerField()
-    pais = models.CharField(max_length=300)
-    inst_educativa = models.CharField(max_length=300)
-    candidato = models.ForeignKey('Candidato')
-
-
-class Universitario(models.Model):
-    departamento = models.CharField(max_length=300)
-    pais = models.CharField(max_length=300)
-    concluido = models.NullBooleanField()
-    grado_titulo = models.CharField(max_length=300)
-    provincia = models.CharField(max_length=300)
-    facultad = models.CharField(max_length=300)
-    carrera = models.CharField(max_length=300)
-    inicio = models.IntegerField()
-    fin = models.IntegerField()
-    inst_educativa = models.CharField(max_length=300)
-    distrito = models.CharField(max_length=300)
-    candidato = models.ForeignKey('Candidato')
-
-
 class Partidario(models.Model):
     cargo = models.CharField(max_length=300)
     ambito = models.CharField(max_length=300)
@@ -191,35 +162,42 @@ class Experiencia(models.Model):
     candidato = models.ForeignKey('Candidato')
 
 
-class Colegio(models.Model):
-    inst_educativa = models.CharField(max_length=300)
+class Estudio(models.Model):
+    PRIMARIA = 'primaria'
+    SECUNDARIA = 'secundaria'
+    TECNICO = 'tecnica'
+    UNIVERSITARIA = 'universitaria'
+    TYPE_STUDY_CHOICES = (
+        (PRIMARIA, 'primaria'),
+        (SECUNDARIA, 'secundaria'),
+        (UNIVERSITARIA, 'universitaria'),
+    )
+
+    candidato = models.ForeignKey('Candidato')
+    institucion_educativa = models.ForeignKey('InstitucionEducativa')
+    tipo_de_estudio = models.CharField(choices=TYPE_STUDY_CHOICES, blank=True,
+                                       help_text='Colegio, instituto, universidad y grado de instrucción.')
+    concluido = models.NullBooleanField()
+    inicio = models.IntegerField()
+    fin = models.IntegerField()
+
+    # universitaria
+    grado_titulo = models.CharField(max_length=300)
+    facultad = models.CharField(max_length=300)
+    carrera = models.CharField(max_length=300)
+
+    # tecnica
+    curso = models.CharField(max_length=300)
+    especialidad = models.CharField(max_length=300)
+
+
+class InstitucionEducativa(models.Model):
+    nombre = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
     extranjero = models.CharField(max_length=300)
     departamento = models.CharField(max_length=300)
     provincia = models.CharField(max_length=300)
     distrito = models.CharField(max_length=300)
-    estudiante = models.ManyToManyField(Candidato, through='Primaria')
-
-
-class Primaria(models.Model):
-    concluido = models.NullBooleanField()
-    inicio = models.IntegerField()
-    fin = models.IntegerField()
-    tipo_educacion = models.CharField(max_length=300)
-    candidato = models.ForeignKey('Candidato')
-    colegio = models.ForeignKey('Colegio')
-
-
-class Secundaria(models.Model):
-    concluido = models.NullBooleanField()
-    provincia = models.CharField(max_length=300)
-    departamento = models.CharField(max_length=300)
-    distrito = models.CharField(max_length=300)
-    inicio = models.IntegerField()
-    fin = models.IntegerField()
-    pais = models.CharField(max_length=300)
-    inst_educativa = models.CharField(max_length=300)
-    candidato = models.ForeignKey('Candidato')
 
 
 class Observacion(models.Model):
