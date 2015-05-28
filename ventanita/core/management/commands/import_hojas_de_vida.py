@@ -12,6 +12,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from core.models import Candidato
 from core.models import InstitucionEducativa
+from core.utils import get_item_from_list
 
 
 class Command(BaseCommand):
@@ -65,35 +66,33 @@ class Command(BaseCommand):
         instituciones = []
         for line in dump:
             fields = line.strip().split('\t')
-            try:
-                provincia_primaria = fields[13]
-            except IndexError:
-                provincia_primaria = ''
 
-            try:
-                provincia_secundaria = fields[18]
-            except IndexError:
-                provincia_secundaria = ''
+            nombre_primaria = get_item_from_list(fields, 5)
+            departamento_primaria = get_item_from_list(fields, 12)
+            provincia_primaria = get_item_from_list(fields, 13)
+            distrito_primaria = get_item_from_list(fields, 14)
 
-            try:
-                extranjero = fields[20]
-            except IndexError:
-                extranjero = ''
+            nombre_secundaria = get_item_from_list(fields, 6)
+            departamento_secundaria = get_item_from_list(fields, 17)
+            provincia_secundaria = get_item_from_list(fields, 18)
+            distrito_secundaria = get_item_from_list(fields, 19)
 
-            try:
-                pais = fields[21]
-            except IndexError:
-                pais = ''
+            extranjero = get_item_from_list(fields, 20)
+            pais = get_item_from_list(fields, 21)
 
             # primaria
-            this_inst_edu = InstitucionEducativa(nombre=fields[5], departamento=fields[12],
-                                                 provincia=provincia_primaria, distrito=fields[14],
+            this_inst_edu = InstitucionEducativa(nombre=nombre_primaria,
+                                                 departamento=departamento_primaria,
+                                                 provincia=provincia_primaria,
+                                                 distrito=distrito_primaria,
                                                  extranjero=extranjero, pais=pais)
             instituciones.append(this_inst_edu)
 
             # secundaria
-            this_inst_edu = InstitucionEducativa(nombre=fields[6], departamento=fields[17],
-                                                 provincia=provincia_secundaria, distrito=fields[19],
+            this_inst_edu = InstitucionEducativa(nombre=nombre_secundaria,
+                                                 departamento=departamento_secundaria,
+                                                 provincia=provincia_secundaria,
+                                                 distrito=distrito_secundaria,
                                                  extranjero=extranjero, pais=pais)
             instituciones.append(this_inst_edu)
         InstitucionEducativa.objects.bulk_create(instituciones)
