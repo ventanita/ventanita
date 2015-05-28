@@ -116,18 +116,6 @@ class Penal(models.Model):
     candidato = models.ForeignKey('Candidato')
 
 
-class Postgrado(models.Model):
-    concluido = models.NullBooleanField()
-    grado_titulo = models.CharField(max_length=300)
-    tipo = models.CharField(max_length=300)
-    inicio = models.IntegerField()
-    fin = models.IntegerField()
-    pais = models.CharField(max_length=300)
-    inst_educativa = models.CharField(max_length=300)
-    especialidad = models.CharField(max_length=300)
-    candidato = models.ForeignKey('Candidato')
-
-
 class Partidario(models.Model):
     cargo = models.CharField(max_length=300)
     ambito = models.CharField(max_length=300)
@@ -165,12 +153,15 @@ class Experiencia(models.Model):
 class Estudio(models.Model):
     PRIMARIA = 'primaria'
     SECUNDARIA = 'secundaria'
-    TECNICO = 'tecnica'
+    TECNICA = 'tecnica'
     UNIVERSITARIA = 'universitaria'
+    POSTGRADO = 'postgrado'
     TYPE_STUDY_CHOICES = (
         (PRIMARIA, 'primaria'),
+        (TECNICA, 'tecnica'),
         (SECUNDARIA, 'secundaria'),
         (UNIVERSITARIA, 'universitaria'),
+        (POSTGRADO, 'postgrado'),
     )
 
     candidato = models.ForeignKey('Candidato')
@@ -181,14 +172,17 @@ class Estudio(models.Model):
     inicio = models.IntegerField()
     fin = models.IntegerField()
 
+    # tecnica
+    curso = models.CharField(max_length=300)
+    especialidad = models.CharField(max_length=300)
+
     # universitaria
     grado_titulo = models.CharField(max_length=300)
     facultad = models.CharField(max_length=300)
     carrera = models.CharField(max_length=300)
 
-    # tecnica
-    curso = models.CharField(max_length=300)
-    especialidad = models.CharField(max_length=300)
+    # postgrado
+    tipo = models.CharField(max_length=300)
 
 
 class InstitucionEducativa(models.Model):
@@ -207,7 +201,6 @@ class Observacion(models.Model):
 
 
 # Registro de morosos por alimentos. REDAM.
-
 class DeudorRedam(models.Model):
     """Demandado"""
     dni = models.CharField(max_length=8)
