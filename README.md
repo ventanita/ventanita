@@ -141,9 +141,13 @@ Van en el folder ``scripts_for_imports``:
 * Puedes importar el ``dummy_data`` a una base de datos MSSQL usando el script
   ``import_to_mssql.py``.
 * Importar registros del REDAM: 
-  ``python ventanita/manage.py import_redam --jsonfile=redam.jl --settings=ventanita.settings.local``
+```shell
+python ventanita/manage.py import_redam --jsonfile=redam.jl --settings=ventanita.settings.local
+```
 * Importar hojas_de_vida: 
-  ``python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data0.tsv --settings=ventanita.settings.local``
+```shell
+python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data0.tsv --settings=ventanita.settings.local
+```
   
 ## Licencia
 Este es un proyecto *open source* con una licencia permisiva (**WTFPL**, ver archivos
