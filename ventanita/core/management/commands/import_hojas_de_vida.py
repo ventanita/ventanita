@@ -86,32 +86,26 @@ class Command(BaseCommand):
             fields = line.strip().split('\t')
             if fields[1] == 'DNI':
                 continue
-            e = self.construct_primaria_obj(fields)
+            e = self.construct_education_obj(fields, 'primaria')
             if e.inicio != '0':
                 estudios.append(e)
 
-            e = self.construct_secundaria_obj(fields)
+            e = self.construct_education_obj(fields, 'secundaria')
             if e.inicio != '0':
                 estudios.append(e)
             bar.update()
         Estudio.objects.bulk_create(estudios)
 
-    def construct_primaria_obj(self, fields):
+    def construct_education_obj(self, fields, type):
         candidato = self.get_candidato(fields)
-        colegio_obj = self.get_colegio(fields, 'primaria')
-        educacion_primaria_inicio, educacion_primaria_fin = self.get_primaria_rango(fields)
+        colegio_obj = self.get_colegio(fields, type)
+        if type == 'primaria':
+            educacion_inicio, educacion_fin = self.get_primaria_rango(fields)
+        else:
+            educacion_inicio, educacion_fin = self.get_secundaria_rango(fields)
         e = Estudio(candidato=candidato, institucion_educativa=colegio_obj,
-                    tipo_de_estudio='primaria', inicio=educacion_primaria_inicio,
-                    fin=educacion_primaria_fin)
-        return e
-
-    def construct_secundaria_obj(self, fields):
-        candidato = self.get_candidato(fields)
-        colegio_obj = self.get_colegio(fields, 'secundaria')
-        educacion_secundaria_inicio, educacion_secundaria_fin = self.get_secundaria_rango(fields)
-        e = Estudio(candidato=candidato, institucion_educativa=colegio_obj,
-                    tipo_de_estudio='secundaria', inicio=educacion_secundaria_inicio,
-                    fin=educacion_secundaria_fin)
+                    tipo_de_estudio=type, inicio=educacion_inicio,
+                    fin=educacion_fin)
         return e
 
     def get_candidato(self, fields):
