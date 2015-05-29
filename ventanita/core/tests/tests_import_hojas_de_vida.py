@@ -39,10 +39,16 @@ class TestCommandImportHojasDeVida(TestCase):
         expected = 'ANGELA EDITH'
         self.assertEqual(expected, result)
 
-    def test_import_education_for_candidate(self):
+    def test_import_education_for_candidate_primaria(self):
         c = Candidato.objects.get(dni='23202638')
         result = Estudio.objects.get(candidato=c, tipo_de_estudio='primaria')
         expected = 'I. E SAN MIGUEL'
+        self.assertEqual(expected, result.institucion_educativa.nombre)
+
+    def test_import_education_for_candidate_secundaria(self):
+        c = Candidato.objects.get(dni='43543320')
+        result = Estudio.objects.get(candidato=c, tipo_de_estudio='secundaria')
+        expected = 'I.E. SECUNDARIO VIRGILIO ESPINOZA VAEZ'
         self.assertEqual(expected, result.institucion_educativa.nombre)
 
     def test_import_institucion_educativa(self):
