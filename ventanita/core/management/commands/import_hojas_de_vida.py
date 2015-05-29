@@ -86,32 +86,58 @@ class Command(BaseCommand):
             fields = line.strip().split('\t')
             if fields[1] == 'DNI':
                 continue
-            candidato = self.get_candidato(fields)
-            colegio_primaria_obj = self.get_colegio_primaria(fields)
-            educacion_primaria_inicio, educacion_primaria_fin = self.get_primaria_rango(fields)
-            e = Estudio(candidato=candidato, institucion_educativa=colegio_primaria_obj,
-                        tipo_de_estudio='primaria', inicio=educacion_primaria_inicio,
-                        fin=educacion_primaria_fin)
-            estudios.append(e)
+            e = self.construct_primaria_obj(fields)
+            if e.inicio != '0':
+                estudios.append(e)
+
+            e = self.construct_secundaria_obj(fields)
+            if e.inicio != '0':
+                estudios.append(e)
             bar.update()
         Estudio.objects.bulk_create(estudios)
+
+    def construct_primaria_obj(self, fields):
+        candidato = self.get_candidato(fields)
+        colegio_obj = self.get_colegio(fields, 'primaria')
+        educacion_primaria_inicio, educacion_primaria_fin = self.get_primaria_rango(fields)
+        e = Estudio(candidato=candidato, institucion_educativa=colegio_obj,
+                    tipo_de_estudio='primaria', inicio=educacion_primaria_inicio,
+                    fin=educacion_primaria_fin)
+        return e
+
+    def construct_secundaria_obj(self, fields):
+        candidato = self.get_candidato(fields)
+        colegio_obj = self.get_colegio(fields, 'secundaria')
+        educacion_secundaria_inicio, educacion_secundaria_fin = self.get_secundaria_rango(fields)
+        e = Estudio(candidato=candidato, institucion_educativa=colegio_obj,
+                    tipo_de_estudio='secundaria', inicio=educacion_secundaria_inicio,
+                    fin=educacion_secundaria_fin)
+        return e
 
     def get_candidato(self, fields):
         dni = fields[1]
         candidato = Candidato.objects.get(dni=dni)
         return candidato
 
-    def get_colegio_primaria(self, fields):
-        colegio_primaria = get_institucion_primaria(fields)
-        cole_obj = InstitucionEducativa.objects.get(nombre=colegio_primaria['nombre'],
-                                                    departamento=colegio_primaria['departamento'],
-                                                    provincia=colegio_primaria['provincia'],
-                                                    distrito=colegio_primaria['distrito'])
+    def get_colegio(self, fields, type):
+        if type == 'primaria':
+            colegio = get_institucion_primaria(fields)
+        else:
+            colegio = get_institucion_secundaria(fields)
+        cole_obj = InstitucionEducativa.objects.get(nombre=colegio['nombre'],
+                                                    departamento=colegio['departamento'],
+                                                    provincia=colegio['provincia'],
+                                                    distrito=colegio['distrito'])
         return cole_obj
 
     def get_primaria_rango(self, fields):
         inicio = get_item_from_list(fields, 7)
         fin = get_item_from_list(fields, 8)
+        return inicio, fin
+
+    def get_secundaria_rango(self, fields):
+        inicio = get_item_from_list(fields, 9)
+        fin = get_item_from_list(fields, 10)
         return inicio, fin
 
     def parse_line(self, line):
