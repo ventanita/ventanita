@@ -174,7 +174,7 @@ class Estudio(models.Model):
 
     codigo_anr = models.TextField(blank=True)
     # tecnica
-    curso = models.CharField(max_length=300)
+    curso = models.CharField(max_length=300, help_text='Nombre de estudio')
     especialidad = models.CharField(max_length=300)
 
     # universitaria
@@ -183,7 +183,9 @@ class Estudio(models.Model):
     carrera = models.CharField(max_length=300)
 
     # postgrado
-    tipo = models.CharField(max_length=300)
+    tipo_de_grado = models.TextField(blank=True)
+    tipo_postgrado = models.TextField(blank=True)
+    otro_tipo_documento = models.TextField(blank=True)
 
 
 class InstitucionEducativa(models.Model):
