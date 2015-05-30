@@ -155,9 +155,8 @@ class Command(BaseCommand):
             item['nacimiento_provincia'] = fields[14]
             item['nacimiento_distrito'] = fields[15]
             try:
-                item['nacimiento_fecha'] = datetime.datetime.strptime(fields[16], '%Y-%m-%d')
+                item['nacimiento_fecha'] = datetime.datetime.strptime(fields[16], '%Y%m%d').date()
             except ValueError:
-                # TODO ignore this field for now as data is mangled from Excel
                 item['nacimiento_fecha'] = None
 
             try:
