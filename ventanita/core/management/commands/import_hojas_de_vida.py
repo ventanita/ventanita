@@ -34,6 +34,10 @@ class Command(BaseCommand):
                     ),
     )
 
+    def __init__(self, *args, **kwargs):
+        self.sheet = ''
+        super(Command, self).__init__(*args, **kwargs)
+
     def handle(self, *args, **options):
         if options['tsvfile'] is None or options['sheet'] is None:
             error_msg = 'Enter name of tsv file and sheet number as argument.' \
@@ -42,6 +46,7 @@ class Command(BaseCommand):
 
         tsv_file = options['tsvfile']
         sheet = options['sheet']
+        self.sheet = sheet
 
         with codecs.open(tsv_file, "r") as file_handle:
             dump = file_handle.readlines()
@@ -61,6 +66,7 @@ class Command(BaseCommand):
             self.import_education_for_candidate(dump)
         elif sheet == '2':
             self.import_institucion_educativa_superior(dump)
+            self.import_education_for_candidate(dump)
 
     def import_institucion_educativa(self, dump):
         instituciones = []
@@ -94,6 +100,11 @@ class Command(BaseCommand):
             e = self.construct_education_obj(line, 'secundaria')
             if e.inicio != '0':
                 estudios.append(e)
+
+            if self.sheet == 2:
+                e = self.construct_education_obj(line, 'superior')
+                estudios.append(e)
+
             bar.update()
         Estudio.objects.bulk_create(estudios)
 
