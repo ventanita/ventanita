@@ -30,7 +30,7 @@ class Candidato(models.Model):
     postulacion_distrito = models.CharField(max_length=300)
     postulacion_provincia = models.CharField(max_length=300)
     postulacion_departamento = models.CharField(max_length=300)
-    postulacion_designacion = models.CharField(max_length=300)
+    postulacion_designacion = models.TextField()
 
     # Nacimiento
     nacimiento_pais = models.CharField(max_length=300)
@@ -41,7 +41,7 @@ class Candidato(models.Model):
     nacimiento_departamento = models.CharField(max_length=300)
 
     # Residencia
-    residencia_lugar = models.CharField(max_length=300, blank=True)
+    residencia_lugar = models.TextField(blank=True)
     residencia_ubigeo = models.CharField(max_length=300, blank=True)
     residencia_distrito = models.CharField(max_length=300, blank=True)
     residencia_tiempo = models.CharField(max_length=300, blank=True)
