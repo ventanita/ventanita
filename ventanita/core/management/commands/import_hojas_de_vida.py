@@ -5,7 +5,9 @@
 
 import codecs
 import datetime
+import hashlib
 from optparse import make_option
+import unicodedata
 
 import pyprind
 from django.core.management.base import BaseCommand, CommandError
@@ -80,8 +82,7 @@ class Command(BaseCommand):
     def import_education_for_candidate(self, dump):
         estudios = []
         n = len(dump)
-        bar = pyprind.ProgBar(n)
-        print("Importing studies for candidate")
+        bar = pyprind.ProgBar(n, monitor=True, title="Importing studies for candidate")
         for line in dump:
             fields = line.strip().split('\t')
             if fields[1] == 'DNI':
@@ -118,10 +119,7 @@ class Command(BaseCommand):
             colegio = get_institucion_primaria(fields)
         else:
             colegio = get_institucion_secundaria(fields)
-        cole_obj = InstitucionEducativa.objects.get(nombre=colegio['nombre'],
-                                                    departamento=colegio['departamento'],
-                                                    provincia=colegio['provincia'],
-                                                    distrito=colegio['distrito'])
+        cole_obj = InstitucionEducativa.objects.filter(sha1=make_sha1(colegio))[0]
         return cole_obj
 
     def get_primaria_rango(self, fields):
@@ -156,9 +154,8 @@ class Command(BaseCommand):
             item['nacimiento_provincia'] = fields[14]
             item['nacimiento_distrito'] = fields[15]
             try:
-                item['nacimiento_fecha'] = datetime.datetime.strptime(fields[16], '%Y-%m-%d')
+                item['nacimiento_fecha'] = datetime.datetime.strptime(fields[16], '%Y%m%d').date()
             except ValueError:
-                # TODO ignore this field for now as data is mangled from Excel
                 item['nacimiento_fecha'] = None
 
             try:
@@ -204,7 +201,14 @@ def get_institucion_primaria(fields):
     distrito_primaria = get_item_from_list(fields, 14)
     extranjero = get_item_from_list(fields, 20)
     pais = get_item_from_list(fields, 21)
+    item = {
+        'nombre': nombre_primaria,
+        'departamento': departamento_primaria,
+        'provincia': provincia_primaria,
+        'distrito': distrito_primaria,
+    }
     this_inst_edu = {
+        'sha1': make_sha1(item),
         'nombre': nombre_primaria,
         'departamento': departamento_primaria,
         'provincia': provincia_primaria,
@@ -222,7 +226,14 @@ def get_institucion_secundaria(fields):
     distrito_secundaria = get_item_from_list(fields, 19)
     extranjero = get_item_from_list(fields, 20)
     pais = get_item_from_list(fields, 21)
+    item = {
+        'nombre': nombre_secundaria,
+        'departamento': departamento_secundaria,
+        'provincia': provincia_secundaria,
+        'distrito': distrito_secundaria,
+        }
     this_inst_edu = {
+        'sha1': make_sha1(item),
         'nombre': nombre_secundaria,
         'departamento': departamento_secundaria,
         'provincia': provincia_secundaria,
@@ -239,3 +250,21 @@ def upload_instituciones(instituciones):
         this_inst = InstitucionEducativa(**i)
         objs.append(this_inst)
     InstitucionEducativa.objects.bulk_create(objs)
+
+
+def make_sha1(item):
+    hash_input = str(
+        str(remove_accents(item['nombre'])) +
+        str(remove_accents(item['departamento'])) +
+        str(remove_accents(item['provincia']))
+    )
+    hash_output = hashlib.sha1()
+    hash_output.update(hash_input.encode("utf-8"))
+    return hash_output.hexdigest()
+
+
+def remove_accents(input_str):
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    only_ascii = nkfd_form.encode('ASCII', 'ignore')
+    return only_ascii
+
