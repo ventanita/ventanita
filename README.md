@@ -144,9 +144,15 @@ Van en el folder ``scripts_for_imports``:
 ```shell
 python ventanita/manage.py import_redam --jsonfile=redam.jl --settings=ventanita.settings.local
 ```
-* Importar hojas_de_vida: 
+* Importar hojas_de_vida (datos generales del candidato): 
 ```shell
-python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data0.tsv --settings=ventanita.settings.local
+python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data0.tsv  --sheet=0 --settings=ventanita
+.settings.local
+```
+* Importar hojas_de_vida (educación primaria - secundaria): 
+```shell
+python ventanita/manage.py import_hojas_de_vida --tsvfile=dummy_data1.tsv  --sheet=1 --settings=ventanita
+.settings.local
 ```
   
 ## Licencia
