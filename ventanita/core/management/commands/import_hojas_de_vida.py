@@ -98,15 +98,16 @@ class Command(BaseCommand):
         Estudio.objects.bulk_create(estudios)
 
     def import_institucion_educativa_superior(self, dump):
-        estudios = []
+        instituciones = []
         lines = self.convert_to_lines(dump)
         n = len(lines)
         bar = pyprind.ProgBar(n, monitor=True, title="Importing high studies for candidate")
         for line in lines:
-            e = self.construct_education_obj(line, 'superior')
-            estudios.append(e)
+            this_inst_edu = get_institucion_superior(line)
+            if this_inst_edu not in instituciones:
+                instituciones.append(this_inst_edu)
             bar.update()
-        Estudio.objects.bulk_create(estudios)
+        upload_instituciones(instituciones)
 
     def convert_to_lines(self, dump):
         lines = []
