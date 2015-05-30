@@ -186,6 +186,8 @@ class Estudio(models.Model):
 
 
 class InstitucionEducativa(models.Model):
+    sha1 = models.CharField(max_length=40, db_index=True,
+                            help_text='This is only used when importing data.')
     nombre = models.CharField(max_length=300)
     pais = models.CharField(max_length=300)
     extranjero = models.CharField(max_length=300)
