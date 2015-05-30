@@ -80,8 +80,7 @@ class Command(BaseCommand):
     def import_education_for_candidate(self, dump):
         estudios = []
         n = len(dump)
-        bar = pyprind.ProgBar(n)
-        print("Importing studies for candidate")
+        bar = pyprind.ProgBar(n, monitor=True, title="Importing studies for candidate")
         for line in dump:
             fields = line.strip().split('\t')
             if fields[1] == 'DNI':

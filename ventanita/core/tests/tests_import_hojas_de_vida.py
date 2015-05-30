@@ -3,6 +3,7 @@
 # license. Please see the LICENSE file that should have been included
 # as part of this package.
 
+import datetime
 import os
 
 from django.core.management import call_command
@@ -37,6 +38,12 @@ class TestCommandImportHojasDeVida(TestCase):
         c = Candidato.objects.get(dni='00020789')
         result = c.nombres
         expected = 'ANGELA EDITH'
+        self.assertEqual(expected, result)
+
+    def test_import_date_of_birth(self):
+        c = Candidato.objects.get(dni='00020789')
+        result = c.nacimiento_fecha
+        expected = datetime.date(1952, 1, 4)
         self.assertEqual(expected, result)
 
     def test_import_education_for_candidate_primaria(self):
