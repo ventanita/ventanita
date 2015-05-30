@@ -172,6 +172,7 @@ class Estudio(models.Model):
     inicio = models.IntegerField()
     fin = models.IntegerField()
 
+    codigo_anr = models.TextField(blank=True)
     # tecnica
     curso = models.CharField(max_length=300)
     especialidad = models.CharField(max_length=300)
