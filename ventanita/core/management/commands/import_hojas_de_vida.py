@@ -83,17 +83,15 @@ class Command(BaseCommand):
 
     def import_education_for_candidate(self, dump):
         estudios = []
-        n = len(dump)
+        lines = self.convert_to_lines(dump)
+        n = len(lines)
         bar = pyprind.ProgBar(n, monitor=True, title="Importing studies for candidate")
-        for line in dump:
-            fields = line.strip().split('\t')
-            if fields[1] == 'DNI':
-                continue
-            e = self.construct_education_obj(fields, 'primaria')
+        for line in lines:
+            e = self.construct_education_obj(line, 'primaria')
             if e.inicio != '0':
                 estudios.append(e)
 
-            e = self.construct_education_obj(fields, 'secundaria')
+            e = self.construct_education_obj(line, 'secundaria')
             if e.inicio != '0':
                 estudios.append(e)
             bar.update()
@@ -106,6 +104,9 @@ class Command(BaseCommand):
         bar = pyprind.ProgBar(n, monitor=True, title="Importing high studies for candidate")
         for line in lines:
             e = self.construct_education_obj(line, 'superior')
+            estudios.append(e)
+            bar.update()
+        Estudio.objects.bulk_create(estudios)
 
     def convert_to_lines(self, dump):
         lines = []
@@ -124,12 +125,35 @@ class Command(BaseCommand):
             educacion_inicio, educacion_fin = self.get_primaria_rango(fields)
         elif type == 'secundaria':
             educacion_inicio, educacion_fin = self.get_secundaria_rango(fields)
-        elif type == 'superior':
-            educacion_inicio, educacion_fin = self.get_superior_rango(fields)
-
         e = Estudio(candidato=candidato, institucion_educativa=institucion_ed_obj,
-                    tipo_de_estudio=type, inicio=educacion_inicio,
-                    fin=educacion_fin)
+                    tipo_de_estudio=type, inicio=educacion_inicio, fin=educacion_fin)
+
+        if type == 'superior':
+            educacion_inicio, educacion_fin = self.get_superior_rango(fields)
+            if fields[5] == 'TECNICO':
+                tipo_de_estudio = 'tecnica'
+            elif fields[5] == 'UNIVERSITARIO':
+                tipo_de_estudio = 'universitaria'
+            elif fields[5] == 'POST-GRADO':
+                tipo_de_estudio = 'postgrado'
+            else:
+                tipo_de_estudio = ''
+            type = tipo_de_estudio
+            curso = get_item_from_list(fields, 8)
+            carrera = get_item_from_list(fields, 9)
+            if fields[11] == 'SI':
+                concluido = True
+            else:
+                concluido = False
+            tipo_de_grado = get_item_from_list(fields, 14)
+            codigo_anr = get_item_from_list(fields, 15)
+            tipo_postgrado = get_item_from_list(fields, 16)
+            otro_tipo_documento = get_item_from_list(fields, 17)
+
+            e = Estudio(candidato=candidato, institucion_educativa=institucion_ed_obj, tipo_de_estudio=type,
+                        inicio=educacion_inicio, fin=educacion_fin, curso=curso, carrera=carrera,
+                        concluido=concluido, tipo_de_grado=tipo_de_grado, codigo_anr=codigo_anr,
+                        tipo_postgrado=tipo_postgrado, otro_tipo_documento=otro_tipo_documento)
         return e
 
     def get_candidato(self, fields):
