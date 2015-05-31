@@ -14,6 +14,7 @@ from django.test import TestCase
 from core.models import Candidato
 from core.models import Estudio
 from core.models import InstitucionEducativa
+from core.management.commands.import_hojas_de_vida import get_institucion_superior
 
 
 class TestCommandImportHojasDeVida(TestCase):
@@ -27,6 +28,12 @@ class TestCommandImportHojasDeVida(TestCase):
         dummy_data = os.path.join(settings.BASE_DIR, '..', '..', 'dummy_data', 'dummy_data1.tsv')
         opts = {'tsvfile': dummy_data, 'sheet': '1'}
         call_command(cmd, *args, **opts)
+
+        """
+        dummy_data = os.path.join(settings.BASE_DIR, '..', '..', 'dummy_data', 'dummy_data2.tsv')
+        opts = {'tsvfile': dummy_data, 'sheet': '2'}
+        call_command(cmd, *args, **opts)
+        """
 
     def test_import_fail(self):
         args = []
@@ -65,3 +72,16 @@ class TestCommandImportHojasDeVida(TestCase):
                     'departamento': 'LA LIBERTAD', 'provincia': 'ASCOPE', 'distrito': 'CHICAMA',
                     'extranjero': '', 'pais': ''}
         self.assertTrue(expected in result)
+
+    def test_import_candidate_sheet_2(self):
+        result = Candidato.objects.get(dni='19862806')
+        expected = 'EGAS'
+        self.assertEqual(expected, result.apellido_materno)
+
+    def test_get_institution_superior(self):
+        with open('dummy_data/dummy_data2.tsv', 'r') as handle:
+            line = handle.readlines()[1]
+        fields = line.split('\t')
+        result = get_institucion_superior(fields)
+        expected = 'NO'
+        self.assertEqual(expected, result['extranjero'])
