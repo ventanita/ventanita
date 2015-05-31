@@ -34,6 +34,10 @@ class Command(BaseCommand):
                     ),
     )
 
+    def __init__(self, *args, **kwargs):
+        self.sheet = ''
+        super(Command, self).__init__(*args, **kwargs)
+
     def handle(self, *args, **options):
         if options['tsvfile'] is None or options['sheet'] is None:
             error_msg = 'Enter name of tsv file and sheet number as argument.' \
@@ -42,6 +46,7 @@ class Command(BaseCommand):
 
         tsv_file = options['tsvfile']
         sheet = options['sheet']
+        self.sheet = sheet
 
         with codecs.open(tsv_file, "r") as file_handle:
             dump = file_handle.readlines()
@@ -58,6 +63,9 @@ class Command(BaseCommand):
             Candidato.objects.bulk_create(items)
         elif sheet == '1':
             self.import_institucion_educativa(dump)
+            self.import_education_for_candidate(dump)
+        elif sheet == '2':
+            self.import_institucion_educativa_superior(dump)
             self.import_education_for_candidate(dump)
 
     def import_institucion_educativa(self, dump):
@@ -81,32 +89,84 @@ class Command(BaseCommand):
 
     def import_education_for_candidate(self, dump):
         estudios = []
-        n = len(dump)
+        lines = self.convert_to_lines(dump)
+        n = len(lines)
         bar = pyprind.ProgBar(n, monitor=True, title="Importing studies for candidate")
+        for line in lines:
+            if self.sheet == '2':
+                e = self.construct_education_obj(line, 'superior')
+                estudios.append(e)
+            elif self.sheet == '1':
+                e = self.construct_education_obj(line, 'primaria')
+                if e.inicio != '0':
+                    estudios.append(e)
+
+                e = self.construct_education_obj(line, 'secundaria')
+                if e.inicio != '0':
+                    estudios.append(e)
+
+            bar.update()
+        Estudio.objects.bulk_create(estudios)
+
+    def import_institucion_educativa_superior(self, dump):
+        instituciones = []
+        lines = self.convert_to_lines(dump)
+        n = len(lines)
+        bar = pyprind.ProgBar(n, monitor=True, title="Importing high studies for candidate")
+        for line in lines:
+            this_inst_edu = get_institucion_superior(line)
+            if this_inst_edu not in instituciones:
+                instituciones.append(this_inst_edu)
+            bar.update()
+        upload_instituciones(instituciones)
+
+    def convert_to_lines(self, dump):
+        lines = []
+        append = lines.append
         for line in dump:
             fields = line.strip().split('\t')
             if fields[1] == 'DNI':
                 continue
-            e = self.construct_education_obj(fields, 'primaria')
-            if e.inicio != '0':
-                estudios.append(e)
-
-            e = self.construct_education_obj(fields, 'secundaria')
-            if e.inicio != '0':
-                estudios.append(e)
-            bar.update()
-        Estudio.objects.bulk_create(estudios)
+            append(fields)
+        return lines
 
     def construct_education_obj(self, fields, type):
         candidato = self.get_candidato(fields)
-        colegio_obj = self.get_colegio(fields, type)
+        institucion_ed_obj = self.get_inst_ed(fields, type)
+        if type == 'superior':
+            educacion_inicio, educacion_fin = get_superior_rango(fields)
+            if fields[5] == 'TECNICO':
+                tipo_de_estudio = 'tecnica'
+            elif fields[5] == 'UNIVERSITARIO':
+                tipo_de_estudio = 'universitaria'
+            elif fields[5] == 'POST-GRADO':
+                tipo_de_estudio = 'postgrado'
+            else:
+                tipo_de_estudio = ''
+            type = tipo_de_estudio
+            curso = get_item_from_list(fields, 8)
+            carrera = get_item_from_list(fields, 9)
+            if fields[11] == 'SI':
+                concluido = True
+            else:
+                concluido = False
+            tipo_de_grado = get_item_from_list(fields, 14)
+            codigo_anr = get_item_from_list(fields, 15)
+            tipo_postgrado = get_item_from_list(fields, 16)
+            otro_tipo_documento = get_item_from_list(fields, 17)
+
+            e = Estudio(candidato=candidato, institucion_educativa=institucion_ed_obj, tipo_de_estudio=type,
+                        inicio=educacion_inicio, fin=educacion_fin, curso=curso, carrera=carrera,
+                        concluido=concluido, tipo_de_grado=tipo_de_grado, codigo_anr=codigo_anr,
+                        tipo_postgrado=tipo_postgrado, otro_tipo_documento=otro_tipo_documento)
+            return e
+
         if type == 'primaria':
             educacion_inicio, educacion_fin = self.get_primaria_rango(fields)
-        else:
+        elif type == 'secundaria':
             educacion_inicio, educacion_fin = self.get_secundaria_rango(fields)
-        e = Estudio(candidato=candidato, institucion_educativa=colegio_obj,
-                    tipo_de_estudio=type, inicio=educacion_inicio,
-                    fin=educacion_fin)
+        e = Estudio(candidato=candidato, institucion_educativa=institucion_ed_obj,
+                    tipo_de_estudio=type, inicio=educacion_inicio, fin=educacion_fin)
         return e
 
     def get_candidato(self, fields):
@@ -114,11 +174,13 @@ class Command(BaseCommand):
         candidato = Candidato.objects.get(dni=dni)
         return candidato
 
-    def get_colegio(self, fields, type):
+    def get_inst_ed(self, fields, type):
         if type == 'primaria':
             colegio = get_institucion_primaria(fields)
-        else:
+        elif type == 'secundaria':
             colegio = get_institucion_secundaria(fields)
+        elif type == 'superior':
+            colegio = get_institucion_superior(fields)
         cole_obj = InstitucionEducativa.objects.filter(sha1=make_sha1(colegio))[0]
         return cole_obj
 
@@ -158,40 +220,21 @@ class Command(BaseCommand):
             except ValueError:
                 item['nacimiento_fecha'] = None
 
-            try:
-                item['residencia_departamento'] = fields[17]
-            except IndexError:
-                item['residencia_departamento'] = ''
-
-            try:
-                item['residencia_provincia'] = fields[18]
-            except IndexError:
-                item['residencia_provincia'] = ''
-
-            try:
-                item['residencia_distrito'] = fields[19]
-            except IndexError:
-                item['residencia_distrito'] = ''
-
-            try:
-                item['residencia_lugar'] = fields[20]
-            except IndexError:
-                item['residencia_lugar'] = ''
-
-            try:
-                item['residencia_tiempo'] = fields[21]
-            except IndexError:
-                item['residencia_tiempo'] = ''
+            item['residencia_departamento'] = get_item_from_list(fields, 17)
+            item['residencia_provincia'] = get_item_from_list(fields, 18)
+            item['residencia_distrito'] = get_item_from_list(fields, 19)
+            item['residencia_lugar'] = get_item_from_list(fields, 20)
+            item['residencia_tiempo'] = get_item_from_list(fields, 21)
 
             if item['dni'] != 'DNI':
                 return item
         return None
 
-    def as_dict(self, candidatos_objects):
-        mydict = dict()
-        for i in candidatos_objects:
-            mydict[i.dni] = i
-        return mydict
+
+def get_superior_rango(fields):
+    inicio = get_item_from_list(fields, 12)
+    fin = get_item_from_list(fields, 13)
+    return inicio, fin
 
 
 def get_institucion_primaria(fields):
@@ -244,6 +287,31 @@ def get_institucion_secundaria(fields):
     return this_inst_edu
 
 
+def get_institucion_superior(fields):
+    nombre = get_item_from_list(fields, 10)
+    departamento = get_item_from_list(fields, 18)
+    provincia = get_item_from_list(fields, 19)
+    distrito = get_item_from_list(fields, 20)
+    extranjero = get_item_from_list(fields, 6)
+    pais = get_item_from_list(fields, 7)
+    item = {
+        'nombre': nombre,
+        'departamento': departamento,
+        'provincia': provincia,
+        'distrito': distrito,
+    }
+    this_inst_edu = {
+        'sha1': make_sha1(item),
+        'nombre': nombre,
+        'departamento': departamento,
+        'provincia': provincia,
+        'distrito': distrito,
+        'extranjero': extranjero,
+        'pais': pais,
+    }
+    return this_inst_edu
+
+
 def upload_instituciones(instituciones):
     objs = []
     for i in instituciones:
@@ -267,4 +335,3 @@ def remove_accents(input_str):
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     only_ascii = nkfd_form.encode('ASCII', 'ignore')
     return only_ascii
-

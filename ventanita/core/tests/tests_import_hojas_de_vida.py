@@ -28,6 +28,10 @@ class TestCommandImportHojasDeVida(TestCase):
         opts = {'tsvfile': dummy_data, 'sheet': '1'}
         call_command(cmd, *args, **opts)
 
+        dummy_data = os.path.join(settings.BASE_DIR, '..', '..', 'dummy_data', 'dummy_data2.tsv')
+        opts = {'tsvfile': dummy_data, 'sheet': '2'}
+        call_command(cmd, *args, **opts)
+
     def test_import_fail(self):
         args = []
         opts = {}
@@ -65,3 +69,14 @@ class TestCommandImportHojasDeVida(TestCase):
                     'departamento': 'LA LIBERTAD', 'provincia': 'ASCOPE', 'distrito': 'CHICAMA',
                     'extranjero': '', 'pais': ''}
         self.assertTrue(expected in result)
+
+    def test_import_candidate_sheet_2(self):
+        result = Candidato.objects.get(dni='19862806')
+        expected = 'EGAS'
+        self.assertEqual(expected, result.apellido_materno)
+
+    def test_importing_superior_education(self):
+        c = Candidato.objects.get(dni='19862806')
+        result = Estudio.objects.get(candidato=c, tipo_de_estudio='tecnica')
+        expected = 1990
+        self.assertEqual(expected, result.inicio)
