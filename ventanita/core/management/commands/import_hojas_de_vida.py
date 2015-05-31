@@ -134,7 +134,7 @@ class Command(BaseCommand):
         candidato = self.get_candidato(fields)
         institucion_ed_obj = self.get_inst_ed(fields, type)
         if type == 'superior':
-            educacion_inicio, educacion_fin = self.get_superior_rango(fields)
+            educacion_inicio, educacion_fin = get_superior_rango(fields)
             if fields[5] == 'TECNICO':
                 tipo_de_estudio = 'tecnica'
             elif fields[5] == 'UNIVERSITARIO':
@@ -194,11 +194,6 @@ class Command(BaseCommand):
         fin = get_item_from_list(fields, 10)
         return inicio, fin
 
-    def get_superior_rango(self, fields):
-        inicio = get_item_from_list(fields, 12)
-        fin = get_item_from_list(fields, 13)
-        return inicio, fin
-
     def parse_line(self, line):
         line = line.strip()
         if line != '':
@@ -234,6 +229,12 @@ class Command(BaseCommand):
             if item['dni'] != 'DNI':
                 return item
         return None
+
+
+def get_superior_rango(fields):
+    inicio = get_item_from_list(fields, 12)
+    fin = get_item_from_list(fields, 13)
+    return inicio, fin
 
 
 def get_institucion_primaria(fields):

@@ -14,7 +14,6 @@ from django.test import TestCase
 from core.models import Candidato
 from core.models import Estudio
 from core.models import InstitucionEducativa
-from core.management.commands.import_hojas_de_vida import get_institucion_superior
 
 
 class TestCommandImportHojasDeVida(TestCase):
@@ -29,11 +28,9 @@ class TestCommandImportHojasDeVida(TestCase):
         opts = {'tsvfile': dummy_data, 'sheet': '1'}
         call_command(cmd, *args, **opts)
 
-        """
         dummy_data = os.path.join(settings.BASE_DIR, '..', '..', 'dummy_data', 'dummy_data2.tsv')
         opts = {'tsvfile': dummy_data, 'sheet': '2'}
         call_command(cmd, *args, **opts)
-        """
 
     def test_import_fail(self):
         args = []
@@ -78,10 +75,8 @@ class TestCommandImportHojasDeVida(TestCase):
         expected = 'EGAS'
         self.assertEqual(expected, result.apellido_materno)
 
-    def test_get_institution_superior(self):
-        with open('dummy_data/dummy_data2.tsv', 'r') as handle:
-            line = handle.readlines()[1]
-        fields = line.split('\t')
-        result = get_institucion_superior(fields)
-        expected = 'NO'
-        self.assertEqual(expected, result['extranjero'])
+    def test_importing_superior_education(self):
+        c = Candidato.objects.get(dni='19862806')
+        result = Estudio.objects.get(candidato=c, tipo_de_estudio='tecnica')
+        expected = 1990
+        self.assertEqual(expected, result.inicio)
