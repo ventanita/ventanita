@@ -235,12 +235,6 @@ class Command(BaseCommand):
                 return item
         return None
 
-    def as_dict(self, candidatos_objects):
-        mydict = dict()
-        for i in candidatos_objects:
-            mydict[i.dni] = i
-        return mydict
-
 
 def get_institucion_primaria(fields):
     nombre_primaria = get_item_from_list(fields, 5)
