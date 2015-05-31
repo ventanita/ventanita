@@ -93,17 +93,17 @@ class Command(BaseCommand):
         n = len(lines)
         bar = pyprind.ProgBar(n, monitor=True, title="Importing studies for candidate")
         for line in lines:
-            e = self.construct_education_obj(line, 'primaria')
-            if e.inicio != '0':
-                estudios.append(e)
-
-            e = self.construct_education_obj(line, 'secundaria')
-            if e.inicio != '0':
-                estudios.append(e)
-
-            if self.sheet == 2:
+            if self.sheet == '2':
                 e = self.construct_education_obj(line, 'superior')
                 estudios.append(e)
+            elif self.sheet == '1':
+                e = self.construct_education_obj(line, 'primaria')
+                if e.inicio != '0':
+                    estudios.append(e)
+
+                e = self.construct_education_obj(line, 'secundaria')
+                if e.inicio != '0':
+                    estudios.append(e)
 
             bar.update()
         Estudio.objects.bulk_create(estudios)
@@ -133,13 +133,6 @@ class Command(BaseCommand):
     def construct_education_obj(self, fields, type):
         candidato = self.get_candidato(fields)
         institucion_ed_obj = self.get_inst_ed(fields, type)
-        if type == 'primaria':
-            educacion_inicio, educacion_fin = self.get_primaria_rango(fields)
-        elif type == 'secundaria':
-            educacion_inicio, educacion_fin = self.get_secundaria_rango(fields)
-        e = Estudio(candidato=candidato, institucion_educativa=institucion_ed_obj,
-                    tipo_de_estudio=type, inicio=educacion_inicio, fin=educacion_fin)
-
         if type == 'superior':
             educacion_inicio, educacion_fin = self.get_superior_rango(fields)
             if fields[5] == 'TECNICO':
@@ -166,6 +159,14 @@ class Command(BaseCommand):
                         inicio=educacion_inicio, fin=educacion_fin, curso=curso, carrera=carrera,
                         concluido=concluido, tipo_de_grado=tipo_de_grado, codigo_anr=codigo_anr,
                         tipo_postgrado=tipo_postgrado, otro_tipo_documento=otro_tipo_documento)
+            return e
+
+        if type == 'primaria':
+            educacion_inicio, educacion_fin = self.get_primaria_rango(fields)
+        elif type == 'secundaria':
+            educacion_inicio, educacion_fin = self.get_secundaria_rango(fields)
+        e = Estudio(candidato=candidato, institucion_educativa=institucion_ed_obj,
+                    tipo_de_estudio=type, inicio=educacion_inicio, fin=educacion_fin)
         return e
 
     def get_candidato(self, fields):
