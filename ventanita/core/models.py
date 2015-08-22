@@ -208,7 +208,7 @@ class Observacion(models.Model):
 # Registro de morosos por alimentos. REDAM.
 class DeudorRedam(models.Model):
     """Demandado"""
-    dni = models.CharField(max_length=8)
+    dni = models.TextField()
     paternal_surname = models.TextField()
     maternal_surname = models.TextField()
     given_names = models.TextField()
