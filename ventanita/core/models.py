@@ -209,15 +209,15 @@ class Observacion(models.Model):
 class DeudorRedam(models.Model):
     """Demandado"""
     dni = models.CharField(max_length=8)
-    apellido_paterno = models.CharField(max_length=100)
-    apellido_materno = models.CharField(max_length=100)
-    nombres = models.CharField(max_length=200)
+    paternal_surname = models.TextField()
+    maternal_surname = models.TextField()
+    given_names = models.TextField()
     url = models.URLField()
-    debe = models.FloatField()
+    debt = models.FloatField()
 
 
-class DeudorRedamVinculo(models.Model):
+class DeudorRedamBond(models.Model):
     """Demandante"""
-    deudor = models.ForeignKey('DeudorRedam')
-    vinculo = models.CharField(max_length=100)
-    nombre_completo = models.CharField(max_length=300)
+    debtor = models.ForeignKey('DeudorRedam')
+    bond_type = models.TextField()
+    full_name = models.TextField()
