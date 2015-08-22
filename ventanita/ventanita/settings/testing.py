@@ -9,6 +9,6 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test.db',
+        'NAME': 'test',
     }
 }
